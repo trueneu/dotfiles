@@ -1,0 +1,1 @@
+bind -T prefix . run "tmux save-buffer - | /home/pgurkov/bin/pbforward"

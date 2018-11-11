@@ -1,0 +1,1 @@
+bind . run "tmux save-buffer - | /Users/pgurkov/git_tree/dotfiles/bin/pbforward"
