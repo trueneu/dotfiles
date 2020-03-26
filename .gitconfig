@@ -18,3 +18,11 @@
   hide-dirty = 1
 [include]
   path = ~/.gitconfig.booking
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[user]
+	name = Pavel Gurkov
+	email = pavel.gurkov@booking.com

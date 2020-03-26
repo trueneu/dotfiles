@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-launchctl load ~/Library/LaunchAgents/pbcopy.plist
+launchctl load -w ~/Library/LaunchAgents/pbcopy.plist

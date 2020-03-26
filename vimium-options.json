@@ -1,10 +1,19 @@
 {
-  "settingsVersion": "1.64",
-  "exclusionRules": [],
+  "settingsVersion": "1.66",
+  "exclusionRules": [
+    {
+      "pattern": "https?://*.lom.booking.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://www.google.com/*",
+      "passKeys": ""
+    }
+  ],
   "filterLinkHints": false,
   "waitForEnterForFilteredHints": true,
   "hideHud": false,
-  "keyMappings": "unmap t\nunmap O\nmap t Vomnibar.activateInNewTab\nunmap J\nunmap K\nunmap gT\nunmap gt\nmap <c-n> nextTab\nmap <c-p> previousTab",
+  "keyMappings": "unmap t\nunmap O\nmap t Vomnibar.activateInNewTab\nunmap J\nunmap K\nunmap gT\nunmap gt\nunmap L\nunmap n\nmap n performFind\nmap N performBackwardsFind\nmap K goForward\nmap J goBack\nmap O previousTab\nmap U nextTab",
   "linkHintCharacters": "oeuhtnidpyfgkxbm",
   "linkHintNumbers": "0123456789",
   "newTabUrl": "about:newtab",
