@@ -1,0 +1,10 @@
+AddKeysToAgent yes
+ForwardAgent yes
+RemoteForward 60158 127.0.0.1:60158
+
+ServerAliveInterval 60
+TCPKeepAlive yes
+KeepAlive yes
+VerifyHostKeyDNS yes
+StrictHostKeyChecking no
+ForwardX11 no
