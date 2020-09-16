@@ -6,7 +6,7 @@ from xkeysnail.transform import *
 # Use the following for testing terminal keymaps
 # terminals = [ "", ... ]
 # xbindkeys -mk
-terminals = ["gnome-terminal","konsole","io.elementary.terminal","terminator","sakura","guake","tilda","xterm","eterm","kitty","alacritty","mate-terminal","tilix","xfce4-terminal"]
+terminals = ["gnome-terminal","konsole","io.elementary.terminal","terminator","sakura","guake","tilda","xterm","eterm","kitty","alacritty","mate-terminal","tilix","xfce4-terminal","uxterm"]
 terminals = [term.casefold() for term in terminals]
 termStr = "|".join(str(x) for x in terminals)
 
@@ -425,6 +425,7 @@ define_keymap(re.compile(termStr, re.IGNORECASE),{
     K("RC-W"): K("C-Shift-W"),
     K("RC-E"): K("C-Shift-E"),
     K("RC-LEFT_BRACE"): K("C-Shift-LEFT_BRACE"),
+
     K("RC-KPASTERISK"): K("C-Shift-KPASTERISK"),
 
     K("LC-LEFT_BRACE") : K("RSuper-LEFT_BRACE"),
@@ -432,22 +433,48 @@ define_keymap(re.compile(termStr, re.IGNORECASE),{
 
     K("M-BACKSPACE"): K("LC-Comma"),
 
-    K("F1"): [K("LC-N"), K("I")],
-    K("F2"): [K("LC-N"), K("Shift-Key_1")],
-    K("Shift-F2"): [K("LC-N"), K("Shift-Z")],
-    K("F3"): [K("LC-N"), K("W")],
-    K("F5"): [K("LC-N"), K("B")],
-    K("F5"): [K("LC-N"), K("B")],
-    K("F12"): [K("LC-N"), K("Key_2")],
-    K("Shift-F12"): [K("LC-N"), K("E")],
+    K("RC-RSuper-RM-F1"): [K("LC-N"), K("I")],
+    K("RC-RSuper-RM-F2"): [K("LC-N"), K("Shift-Key_1")],
+    K("RC-RSuper-RM-Shift-F2"): [K("LC-N"), K("Shift-Z")],
+
+    K("RC-RSuper-RM-F3"): [K("LC-N"), K("W")],
+    K("RC-RSuper-RM-F4"): pass_through_key,
+ 
+    K("RC-RSuper-RM-F5"): [K("LC-N"), K("B")],
+    K("RC-RSuper-RM-F6"): pass_through_key,
+    K("RC-RSuper-RM-F12"): [K("LC-N"), K("Key_2")],
+    K("RC-RSuper-RM-Shift-F12"): [K("LC-N"), K("E")],
+
     K("M-Shift-Left"): [K("LC-N"), K("R")],
     K("M-Shift-Right"): [K("LC-N"), K("L")],
-    K("Shift-Left"): [K("LC-N"), K("J")],
-    K("Shift-Right"): [K("LC-N"), K("P")],
-    K("Shift-Up"): [K("LC-N"), K("V")],
-    K("Shift-Down"): [K("LC-N"), K("C")],
+
+    # tmux pane switching
+    K("LC-Shift-Left"): [K("LC-N"), K("J")],
+    K("LC-Shift-Right"): [K("LC-N"), K("P")],
+    K("LC-Shift-Up"): [K("LC-N"), K("V")],
+    K("LC-Shift-Down"): [K("LC-N"), K("C")],
+
     K("M-LC-Shift-Left"): [K("LC-N"), K("Shift-J")],
     K("M-LC-Shift-Right"): [K("LC-N"), K("Shift-P")],
     
     K("RC-Space"): K("Super-Space"),
+    # K("LC-Enter"): K("Super-Enter"),
+
+    # K("LC-RC-Y"): K("LC-Super-Y"),
+    # K("LC-RC-Up"): K("LC-Super-Up"),
+    # K("LC-RC-Down"): K("LC-Super-Down"),
+    # K("LC-RC-Left"): K("LC-Super-Left"),
+    # K("LC-RC-Right"): K("LC-Super-Right"),
+
+    # K("LC-Left"): K("Super-Left"),
+    # K("LC-Right"): K("Super-Right"),
+    # K("LC-Down"): K("Super-Down"),
+    # K("LC-Up"): K("Super-Up"),
+
+    # K("LC-Shift-Left"): K("Super-Shift-Left"),
+    # K("LC-Shift-Right"): K("Super-Shift-Right"),
+    # K("LC-Shift-Down"): K("Super-Shift-Down"),
+    # K("LC-Shift-Up"): K("Super-Shift-Up"),
+    
+    
 }, "terminals")
