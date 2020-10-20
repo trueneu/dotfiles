@@ -429,6 +429,7 @@ define_keymap(re.compile(termStr, re.IGNORECASE),{
     K("RC-KPASTERISK"): K("C-Shift-KPASTERISK"),
 
     K("LC-LEFT_BRACE") : K("RSuper-LEFT_BRACE"),
+    K("LC-Shift-LEFT_BRACE") : K("RSuper-Shift-LEFT_BRACE"),
     K("LC-RIGHT_BRACE") : K("RSuper-RIGHT_BRACE"),
 
     K("M-BACKSPACE"): K("LC-Comma"),

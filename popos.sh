@@ -56,6 +56,7 @@ cd $HOME
 mkdir -p .config/i3
 
 ln -s $HOME/git_tree/dotfiles/i3/config .config/i3/config
+ln -s $HOME/git_tree/dotfiles/i3/.i3status.conf $HOME/.i3status.conf
 
 cd $HOME/git_tree
 
@@ -108,5 +109,7 @@ cd Pictures/wallpapers
 
 wget https://512pixels.net/downloads/macos-wallpapers/10-13.jpg
 
-feh --bg-scale $HOME/Pictures/wallpapers/10-13.jpg
+sudo apt install numlockx
+
+echo "Don't forget about xkb symbols - I'm too lazy to script that"
 
