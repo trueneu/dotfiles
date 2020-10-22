@@ -28,7 +28,9 @@ def mkdir(d):
 
 def install_packages():
     packages = ['python3-pip', 'emacs-nox', 'wmctrl', 'tmux', 'copyq', 'xclip', 'golang-go', 'dconf-editor', 'i3',
-                'rofi', 'feh', 'libxkbfile-dev', 'cmake', 'lxappearance', 'numlockx', 'xdotool', 'fzf']
+                'rofi', 'feh', 'libxkbfile-dev', 'cmake', 'lxappearance', 'numlockx', 'xdotool', 'fzf',
+                'autotools', 'autoconf', 'libtool', 'libtool-bin', 'rofi-dev', 'libqalculate-dev', 'qalculate',
+                ]
     run_shell("sudo -S apt install -y {}".format(str.join(" ", packages)))
 
 
@@ -41,6 +43,7 @@ def clone_go_repos():
 def clone_repos():
     repos = ['https://github.com/trueneu/dotfiles.git', 'https://github.com/rbreaves/kinto.git',
              'https://github.com/grwlf/xkb-switch.git', 'https://github.com/trueneu/xkeysnail.git',
+             'https://github.com/svenstaro/rofi-calc.git',
              ]
     for repo in repos:
         run_shell("git clone {}".format(repo))
@@ -67,6 +70,15 @@ def install_xkbswitch():
     run_shell("sudo -S ldconfig", GIT_ROOT + "/xkb-switch/build")
 
 
+def install_rofi_calc():
+    run_shell("autoreconf -i", GIT_ROOT + "/rofi-calc")
+    mkdir(GIT_ROOT + "/rofi-calc/build")
+    run_shell("../configure", GIT_ROOT + "/rofi-calc/build")
+    run_shell("make", GIT_ROOT + "/rofi-calc/build")
+    run_shell("make install", GIT_ROOT + "/rofi-calc/build")
+    run_shell("libtool --finish /usr/lib/x86_64-linux-gnu/rofi//", GIT_ROOT + "/rofi-calc/build")
+
+
 def enable_services():
     user_svcs = ["clipper.service"]
     for user_svc in user_svcs:
@@ -84,6 +96,7 @@ def create_symlinks():
         "i3/config": CONFIG_ROOT + "/i3/config",
         "i3/.i3status.conf": HOME + "/.i3status.conf",
         ".Xresources": HOME + "/.Xresources",
+        "copyq.conf": CONFIG_ROOT + "/copyq/copyq.conf",
     }
 
     for k, v in links.items():
@@ -141,6 +154,7 @@ def run():
         install_clipper()
         install_fonts()
         install_jetbrains_toolbox()
+        install_rofi_calc()
 
         wallpaper()
 
@@ -148,6 +162,8 @@ def run():
         create_bin_symlinks()
         enable_services()
         bashrc()
+
+        print("All done. Don't forget about xkb symbols - I'm too lazy to script that!")
 
 
 if __name__ == '__main__':
