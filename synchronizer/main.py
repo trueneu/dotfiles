@@ -11,8 +11,8 @@ FONTS_ROOT = "{}/.fonts".format(HOME)
 
 
 def parser_init():
-    parser = argparse.ArgumentParser(description="Sync dotfiles")
-    parser.add_argument('action', metavar='action', nargs=1, type=str, choices=['install'])
+    parser = argparse.ArgumentParser(description="Setup the system")
+    parser.add_argument('action', metavar='action', nargs=1, type=str, choices=['all', 'symlinks'])
     return parser
 
 
@@ -164,6 +164,9 @@ def run():
         bashrc()
 
         print("All done. Don't forget about xkb symbols - I'm too lazy to script that!")
+    elif args.action[0] == 'symlinks':
+        create_symlinks()
+        create_bin_symlinks()
 
 
 if __name__ == '__main__':
