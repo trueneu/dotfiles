@@ -31,7 +31,7 @@ ln -s .gitconfig $HOME/.gitconfig
 rm $HOME/.config/kinto/kinto.py
 ln -s kinto.py $HOME/.config/kinto/kinto.py
 
-source $HOME/git_tree/bashrc
+source $HOME/git_tree/.bashrc
 sudo apt install golang-go
 
 cd git_tree
@@ -113,3 +113,4 @@ sudo apt install numlockx
 
 echo "Don't forget about xkb symbols - I'm too lazy to script that"
 
+sudo apt install xdotool

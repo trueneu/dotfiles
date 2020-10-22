@@ -459,6 +459,9 @@ define_keymap(re.compile(termStr, re.IGNORECASE),{
     K("M-LC-Shift-Right"): [K("LC-N"), K("Shift-P")],
     
     K("RC-Space"): K("Super-Space"),
+
+    K("M-Left"): K("M-n"),
+    K("M-Right"): K("M-y"),
     # K("LC-Enter"): K("Super-Enter"),
 
     # K("LC-RC-Y"): K("LC-Super-Y"),
