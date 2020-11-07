@@ -283,6 +283,9 @@ bindsym $mod+j [class="jetbrains-pycharm" instance="jetbrains-pycharm"] focus
 bindsym $mod+i [class="jetbrains-idea" instance="jetbrains-idea"] focus
 bindsym $mod+o [class="Doublecmd" instance="doublecmd"] focus
 bindsym $mod+p [class="Joplin" instance="joplin"] focus
+bindsym $mod+comma [class="REAPER" instance="REAPER"] focus
+bindsym $mod+y [class="Sublime_text" instance="sublime_text"] focus
+
 
 bindsym $mod+Shift+a exec uxterm
 bindsym $mod+Shift+e exec google-chrome
@@ -291,6 +294,8 @@ bindsym $mod+Shift+j exec pycharm
 bindsym $mod+Shift+i exec idea
 bindsym $mod+Shift+o exec doublecmd
 bindsym $mod+Shift+p exec joplin
+bindsym $mod+Shift+comma exec reaper
+bindsym $mod+Shift+y exec subl
 
 # kb layout
 bindsym mod4+space exec --no-startup-id xkb-switch -n

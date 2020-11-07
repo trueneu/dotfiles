@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+$HOME/opt/reaper_linux_x86_64/REAPER/reaper

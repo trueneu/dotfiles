@@ -2,9 +2,12 @@ export GOPATH=$HOME/git_tree/gopath
 export PATH="$PATH:/usr/local/go/bin:$GOPATH/bin:$HOME/.local/bin"
 shopt -s histappend
 shopt -s cmdhist
-export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$"\n"}history -a; history -c; history -r"
+export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 export HISTTIMEFORMAT='%F %T '
 export HISTCONTROL=ignoredups
+export HISTFILESIZE=3000
+export HISTSIZE=3000
+export EDITOR=/usr/bin/emacs
 
 [ -f ~/git_tree/dotfiles/fzf/completion.bash ] && source ~/git_tree/dotfiles/fzf/completion.bash
 

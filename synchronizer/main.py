@@ -8,6 +8,7 @@ GO_ROOT = "{}/git_tree/gopath".format(HOME)
 CONFIG_ROOT = "{}/.config".format(HOME)
 BIN = "{}/bin".format(HOME)
 FONTS_ROOT = "{}/.fonts".format(HOME)
+DOWNLOADS = "{}/Downloads".format(HOME)
 
 
 def parser_init():
@@ -30,8 +31,20 @@ def install_packages():
     packages = ['python3-pip', 'emacs-nox', 'wmctrl', 'tmux', 'copyq', 'xclip', 'golang-go', 'dconf-editor', 'i3',
                 'rofi', 'feh', 'libxkbfile-dev', 'cmake', 'lxappearance', 'numlockx', 'xdotool', 'fzf',
                 'autotools', 'autoconf', 'libtool', 'libtool-bin', 'rofi-dev', 'libqalculate-dev', 'qalculate',
+                'clang', 'clangd', 'libstdc++-10-dev', 'libstdc++-10-doc', 'gcc-10', 'gcc-10-base', 'gcc-10-doc',
+                'jackd', 'qjackctl', 'cadence', 'sublime-text'
                 ]
+    run_shell("sudo -S apt update")
     run_shell("sudo -S apt install -y {}".format(str.join(" ", packages)))
+
+
+def add_repos():
+    mkdir(DOWNLOADS)
+    run_shell('/usr/bin/wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_10.0.3_all.deb', DOWNLOADS)
+    run_shell("sudo -S dpkg -i kxstudio-repos_10.0.3_all.deb", DOWNLOADS)
+    run_shell('''sudo -S mv 'home:manuelschneid3r.asc' $HOME''', '/etc/apt/trusted.gpg.d')
+    run_shell('wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo -S apt-key add -')
+    run_shell('echo "deb https://download.sublimetext.com/ apt/stable/" | sudo -S tee /etc/apt/sources.list.d/sublime-text.list')
 
 
 def clone_go_repos():
@@ -137,6 +150,7 @@ def install_jetbrains_toolbox():
 def run():
     args = parser_init().parse_args()
     if args.action[0] == 'install':
+        add_repos()
         install_packages()
         mkdir(GIT_ROOT)
         mkdir(GO_ROOT)
