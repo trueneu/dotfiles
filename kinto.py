@@ -10,6 +10,16 @@ terminals = ["gnome-terminal","konsole","io.elementary.terminal","terminator","s
 terminals = [term.casefold() for term in terminals]
 termStr = "|".join(str(x) for x in terminals)
 
+editors = ["emacs"]
+editors = [editor.casefold() for editor in editors]
+editorsStr = "|".join(str(x) for x in terminals)
+
+termEditors = []
+termEditors.extend(terminals)
+termEditors.extend(editors)
+termEditorStr = "|".join([termStr, editorsStr])
+
+
 # Use for browser specific hotkeys
 browsers = ["Chromium","Chromium-browser","Google-chrome","Epiphany","Firefox","Discord"]
 browsers = [browser.casefold() for browser in browsers]
@@ -23,7 +33,7 @@ mscodes_terminals.extend(mscodes)
 mscodes_terminals.extend(terminals)
 
 # [Global modemap] Change modifier keys as in xmodmap
-define_conditional_modmap(lambda wm_class: wm_class.casefold() not in terminals,{
+define_conditional_modmap(lambda wm_class: wm_class.casefold() not in termEditors,{
     # # Chromebook
     # Key.LEFT_ALT: Key.RIGHT_CTRL,   # Chromebook
     # Key.LEFT_CTRL: Key.LEFT_ALT,    # Chromebook
@@ -270,7 +280,7 @@ define_keymap(lambda wm_class: wm_class.casefold() not in mscodes_terminals,{
 #     K("M-Right"): [K("M-F19"),K("C-Right")],                # Right of Word
 #     K("M-Shift-Left"): [K("M-F19"),K("C-Shift-Left")],      # Select Left of Word
 #     K("M-Shift-Right"): [K("M-F19"),K("C-Shift-Right")],    # Select Right of Word
-    
+
 #     # K("C-PAGE_DOWN"): pass_through_key,         # cancel next_view
 #     # K("C-PAGE_UP"): pass_through_key,           # cancel prev_view
 #     K("C-M-Left"): K("C-PAGE_UP"),              # next_view
@@ -440,7 +450,7 @@ define_keymap(re.compile(termStr, re.IGNORECASE),{
 
     K("RC-RSuper-RM-F3"): [K("LC-N"), K("W")],
     K("RC-RSuper-RM-F4"): pass_through_key,
- 
+
     K("RC-RSuper-RM-F5"): [K("LC-N"), K("B")],
     K("RC-RSuper-RM-F6"): pass_through_key,
     K("RC-RSuper-RM-F12"): [K("LC-N"), K("Key_2")],
@@ -457,7 +467,7 @@ define_keymap(re.compile(termStr, re.IGNORECASE),{
 
     K("M-LC-Shift-Left"): [K("LC-N"), K("Shift-J")],
     K("M-LC-Shift-Right"): [K("LC-N"), K("Shift-P")],
-    
+
     K("RC-Space"): K("Super-Space"),
 
     K("M-Left"): K("M-n"),
@@ -479,6 +489,6 @@ define_keymap(re.compile(termStr, re.IGNORECASE),{
     # K("LC-Shift-Right"): K("Super-Shift-Right"),
     # K("LC-Shift-Down"): K("Super-Shift-Down"),
     # K("LC-Shift-Up"): K("Super-Shift-Up"),
-    
-    
+
+
 }, "terminals")

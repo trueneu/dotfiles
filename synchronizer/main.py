@@ -32,7 +32,7 @@ def install_packages():
                 'rofi', 'feh', 'libxkbfile-dev', 'cmake', 'lxappearance', 'numlockx', 'xdotool', 'fzf',
                 'autotools', 'autoconf', 'libtool', 'libtool-bin', 'rofi-dev', 'libqalculate-dev', 'qalculate',
                 'clang', 'clangd', 'libstdc++-10-dev', 'libstdc++-10-doc', 'gcc-10', 'gcc-10-base', 'gcc-10-doc',
-                'jackd', 'qjackctl', 'cadence', 'sublime-text'
+                'jackd', 'qjackctl', 'cadence', 'silversearcher-ag',
                 ]
     run_shell("sudo -S apt update")
     run_shell("sudo -S apt install -y {}".format(str.join(" ", packages)))
