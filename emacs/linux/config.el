@@ -229,3 +229,124 @@
   (newline-and-indent))
 
 (bind-key "s-<return>" #'pt/eol-then-newline)
+
+(bind-key "s-w" #'kill-this-buffer)
+
+(use-package sudo-edit)
+
+(defun dired-up-directory-same-buffer ()
+  "Go up in the same buffer."
+  (find-alternate-file ".."))
+
+(defun my-dired-mode-hook ()
+  (put 'dired-find-alternate-file 'disabled nil) ; Disables the warning.
+  (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
+  (define-key dired-mode-map (kbd "^") (lambda () (interactive) (dired-up-directory-same-buffer))))
+
+(add-hook 'dired-mode-hook #'my-dired-mode-hook)
+
+(setq dired-use-ls-dired nil)
+
+(global-so-long-mode)
+
+(use-package duplicate-thing
+  :init
+  (defun my-duplicate-thing ()
+    "Duplicate thing at point without changing the mark."
+    (interactive)
+    (save-mark-and-excursion (duplicate-thing 1)))
+  :bind (("C-c u" . my-duplicate-thing)
+         ("C-c C-u" . my-duplicate-thing)))
+
+;; todo: add :ensure t to each use-package?
+
+(setq read-process-output-max (* 1024 1024)) ; 1mb
+
+(use-package which-key
+  :custom
+  (which-key-setup-side-window-bottom)
+  (which-key-enable-extended-define-key t)
+  :config
+  (which-key-mode)
+  (which-key-setup-minibuffer))
+
+(defun revert-to-two-windows ()
+  "Delete all other windows and split it into two."
+  (interactive)
+  (delete-other-windows)
+  (split-window-right))
+
+(bind-key "C-x 1" #'revert-to-two-windows)
+(bind-key "C-x !" #'delete-other-windows) ;; Access to the old keybinding.
+
+(bind-key "s-g" #'abort-recursive-edit)
+
+(defun kill-this-buffer ()
+  "Kill the current buffer."
+  (interactive)
+  (kill-buffer nil)
+  )
+
+(bind-key "C-x k" #'kill-this-buffer)
+(bind-key "C-x K" #'kill-buffer)
+
+(defun copy-file-name-to-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode) default-directory (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
+
+(bind-key "C-c P" #'copy-file-name-to-clipboard)
+
+(use-package ace-window
+  :config
+  ;; Show the window designators in the modeline.
+  (ace-window-display-mode)
+
+  ;; Make the number indicators a little larger. I'm getting old.
+  ; (set-face-attribute 'aw-leading-char-face nil :height 1.0 :background "black")
+
+  (defun my-ace-window (args)
+    "As ace-window, but hiding the cursor while the action is active."
+    (interactive "P")
+    (cl-letf
+        ((cursor-type nil)
+         (cursor-in-non-selected-window nil))
+      (ace-window nil)))
+
+
+  :bind (("s-," . my-ace-window))
+  :custom
+  (aw-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n ?s) "Designate windows by home row keys, not numbers.")
+  (aw-background nil))
+
+(setq enable-recursive-minibuffers t)
+(minibuffer-depth-indicate-mode)
+
+(defun switch-to-scratch-buffer ()
+  "Switch to the current session's scratch buffer."
+  (interactive)
+  (switch-to-buffer "*scratch*"))
+
+(bind-key "s-s" #'switch-to-scratch-buffer)
+
+;; skipped orgmode section for now -- it seems very complex
+
+(use-package magit
+  :diminish magit-auto-revert-mode
+  :diminish auto-revert-mode
+  :bind (("C-c g" . #'magit-status))
+  :custom
+  (magit-repository-directories '(("~/git_tree" . 1)))
+  :config
+  (add-to-list 'magit-no-confirm 'stage-all-changes))
+
+(use-package libgit)
+
+(use-package magit-libgit
+  :after (magit libgit))
+
+(use-package forge
+  :after magit)
