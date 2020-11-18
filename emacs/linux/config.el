@@ -59,8 +59,8 @@
 ;;     (set-fontset-font "fontset-default" 'unicode "Apple Color Emoji" nil 'prepend)
 ;;   (warn "This Emacs version is too old to properly support emoji."))
 
-;; (unbind-key "C-x C-f") ;; find-file-read-only
-;; (unbind-key "C-x C-d") ;; list-directory
+(unbind-key "C-x C-f") ;; find-file-read-only
+(unbind-key "C-x C-d") ;; list-directory
 (unbind-key "C-z") ;; suspend-frame
 (unbind-key "M-o") ;; facemenu-mode
 (unbind-key "<mouse-2>") ;; pasting with mouse-wheel click
@@ -350,3 +350,114 @@
 
 (use-package forge
   :after magit)
+
+;; todo : no ssh-agent access seemingly
+
+(use-package projectile
+  :init
+  (setq projectile-keymap-prefix (kbd "C-c p"))
+  :diminish
+  :bind (("C-c k" . #'projectile-kill-buffers)
+         ("C-c M" . #'projectile-compile-project))
+  :custom
+  (projectile-completion-system 'ivy)
+  (projectile-enable-caching t)
+  :config
+  (projectile-mode)
+  (setq projectile-project-search-path '("~/git_tree")))
+
+(use-package ivy
+  :diminish
+  :custom
+  (ivy-height 30)
+  (ivy-use-virtual-buffers t)
+  (ivy-use-selectable-prompt t)
+  :config
+  (ivy-mode 1)
+
+  :bind (("C-c C-r" . #'ivy-resume)
+         ("C-c s"   . #'swiper-thing-at-point)
+         ("C-s"     . #'swiper)))
+
+(use-package ivy-rich
+  :custom
+  (ivy-virtual-abbreviate 'full)
+  (ivy-rich-switch-buffer-align-virtual-buffer nil)
+  (ivy-rich-path-style 'full)
+  :config
+  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+  (ivy-rich-mode))
+
+(use-package counsel
+  :init
+  (counsel-mode 1)
+
+  :bind (("C-c ;" . #'counsel-M-x)
+         ("C-c U" . #'counsel-unicode-char)
+         ("C-c i" . #'counsel-imenu)
+         ("C-x f" . #'counsel-find-file)
+         ("C-c y" . #'counsel-yank-pop)
+         ("C-c r" . #'counsel-recentf)
+         ("C-c v" . #'counsel-switch-buffer-other-window)
+         ("C-c H" . #'counsel-projectile-rg)
+         ("C-h h" . #'counsel-command-history)
+         ("C-x C-f" . #'counsel-find-file)
+         :map ivy-minibuffer-map
+         ("C-r" . counsel-minibuffer-history))
+  :diminish)
+
+(use-package counsel-projectile
+  :bind (("C-c f" . #'counsel-projectile)
+         ("C-c F" . #'counsel-projectile-switch-project)))
+
+;; todo read on flycheck
+(use-package flycheck
+  :after org
+  :hook
+  (org-src-mode . disable-flycheck-for-elisp)
+  :custom
+  (flycheck-emacs-lisp-initialize-packages t)
+  (flycheck-display-errors-delay 0.1)
+  :config
+  (global-flycheck-mode)
+  (flycheck-set-indication-mode 'left-margin)
+
+  (defun disable-flycheck-for-elisp ()
+    (setq-local flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+
+  (add-to-list 'flycheck-checkers 'proselint)
+  (setq-default flycheck-disabled-checkers '(haskell-stack-ghc)))
+
+(use-package flycheck-inline
+  :config (global-flycheck-inline-mode))
+
+(use-package deadgrep
+  :bind (("C-c h" . #'deadgrep)))
+
+;; todo: strange keybind
+(use-package visual-regexp
+  :bind (("C-c 5" . #'vr/replace)))
+
+;; todo: bind doesn't work
+(use-package company
+  :diminish
+  :bind (("C-." . #'company-capf))
+  :hook (prog-mode . company-mode)
+  :custom
+  (company-dabbrev-downcase nil "Don't downcase returned candidates.")
+  (company-show-numbers t "Numbers are helpful.")
+  (company-tooltip-limit 20 "The more the merrier.")
+  (company-tooltip-idle-delay 0.4 "Faster!")
+  (company-async-timeout 20 "Some requests can take a long time. That's fine.")
+  :config
+
+  ;; Use the numbers 0-9 to select company completion candidates
+  (let ((map company-active-map))
+    (mapc (lambda (x) (define-key map (format "%d" x)
+			`(lambda () (interactive) (company-complete-number ,x))))
+	  (number-sequence 0 9))))
+
+;; todo: lsp section omitted
+
+(provide 'config)
+;;; config.el ends here
