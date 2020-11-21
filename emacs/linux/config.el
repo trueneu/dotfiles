@@ -124,6 +124,9 @@
   :config
   (keychain-refresh-environment))
 
+(exec-path-from-shell-copy-env "SSH_AGENT_PID")
+(exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
+
 (defalias 'view-emacs-news 'ignore)
 (defalias 'describe-gnu-project 'ignore)
 
