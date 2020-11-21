@@ -479,7 +479,11 @@
 
 ;; todo: strange keybind
 (use-package visual-regexp
-  :bind (("C-c 5" . #'vr/replace)))
+  :bind (("M-%" . #'vr/replace)))
+
+(use-package pcre2el)
+
+(use-package visual-regexp-steroids)
 
 ;; todo: bind doesn't work
 (use-package company
@@ -533,7 +537,8 @@
 (bind-key "s-d" #'my-duplicate-thing)
 (bind-key "s-'" #'reload-config)
 (bind-key "s-e" #'ivy-switch-buffer)
-
+(bind-key "s-f" #'swiper)
+(bind-key "s-r" #'vr/replace)
 
 (use-package sudo-edit)
 
@@ -562,7 +567,6 @@
 
 (bind-key "<M-S-up>" #'move-line-up)
 (bind-key "<M-S-down>" #'move-line-down)
-
 
 (provide 'config)
 ;;; config.el ends here
