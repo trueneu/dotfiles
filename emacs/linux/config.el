@@ -458,6 +458,8 @@
 	  (number-sequence 0 9))))
 
 ;; todo: lsp section omitted
+;; todo: no ssh-agent access
+
 
 (provide 'config)
 ;;; config.el ends here
