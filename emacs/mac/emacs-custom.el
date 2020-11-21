@@ -8,8 +8,10 @@
  '(column-number-mode t)
  '(doom-modeline-mode t)
  '(global-display-line-numbers-mode t)
+ '(ns-pop-up-frames nil)
  '(package-selected-packages
-   '(helm-projectile helm flx ag counsel-projectile ivy-rich projectile iedit ivy-avy avy color-theme-sanityinc-solarized expand-region multiple-cursors centaur-tabs tree-sitter-langs tree-sitter rainbow-delimiters dimmer diminish doom-modeline doom-themes all-the-icons-dired all-the-icons undo-tree keychain-environment gnu-elpa-keyring-update exec-path-from-shell use-package))
+   '(visual-regexp-steroids pcre2el visual-regexp ace-window which-key ht slack forge magit-libgit libgit duplicate-thing sudo-edit magit helm-projectile helm flx ag counsel-projectile ivy-rich projectile iedit ivy-avy avy color-theme-sanityinc-solarized expand-region multiple-cursors centaur-tabs tree-sitter-langs tree-sitter rainbow-delimiters dimmer diminish doom-modeline doom-themes all-the-icons-dired all-the-icons undo-tree keychain-environment gnu-elpa-keyring-update exec-path-from-shell use-package))
+ '(pop-up-frames nil)
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
