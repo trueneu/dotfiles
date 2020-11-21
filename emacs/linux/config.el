@@ -7,6 +7,53 @@
 
 (use-package gnu-elpa-keyring-update)
 
+;; unbind cmd-keys
+(unbind-key "s-,")
+(unbind-key "s-'")
+(unbind-key "s-`")
+(unbind-key "s-~")
+(unbind-key "s--")
+(unbind-key "s-:")
+(unbind-key "s-?")
+(unbind-key "s-^")
+(unbind-key "s-&")
+(unbind-key "s-C")
+(unbind-key "s-D")
+(unbind-key "s-E")
+(unbind-key "s-L")
+(unbind-key "s-M")
+(unbind-key "s-S")
+(unbind-key "s-a")
+(unbind-key "s-c")
+(unbind-key "s-d")
+(unbind-key "s-e")
+(unbind-key "s-f")
+(unbind-key "s-g")
+(unbind-key "s-h")
+(unbind-key "s-H")
+(unbind-key "M-s-h")
+(unbind-key "s-j")
+(unbind-key "s-k")
+(unbind-key "s-l")
+(unbind-key "s-m")
+(unbind-key "s-n")
+(unbind-key "s-o")
+(unbind-key "s-p")
+(unbind-key "s-q")
+(unbind-key "s-s")
+(unbind-key "s-t")
+(unbind-key "s-u")
+(unbind-key "s-v")
+(unbind-key "s-w")
+(unbind-key "s-x")
+(unbind-key "s-y")
+(unbind-key "s-z")
+(unbind-key "s-+")
+(unbind-key "s-=")
+(unbind-key "s--")
+(unbind-key "s-0")
+(unbind-key "s-|")
+
 (setq
  ;; No need to see GNU agitprop.
  inhibit-startup-screen t
@@ -230,8 +277,6 @@
 
 (bind-key "s-<return>" #'pt/eol-then-newline)
 
-(bind-key "s-w" #'kill-this-buffer)
-
 (use-package sudo-edit)
 
 (defun dired-up-directory-same-buffer ()
@@ -329,8 +374,6 @@
   "Switch to the current session's scratch buffer."
   (interactive)
   (switch-to-buffer "*scratch*"))
-
-(bind-key "s-s" #'switch-to-scratch-buffer)
 
 ;; skipped orgmode section for now -- it seems very complex
 
@@ -459,6 +502,66 @@
 
 ;; todo: lsp section omitted
 ;; todo: no ssh-agent access
+
+;; keybindings
+(bind-key "C-x k" #'kill-this-buffer)
+(bind-key "C-x K" #'kill-buffer)
+
+(bind-key "s-g" #'abort-recursive-edit)
+
+(bind-key "<s-f1>" #'make-frame-command)
+(bind-key "<C-f2>" #'split-window-right)
+(bind-key "<C-S-f2>" #'split-window-below)
+(bind-key "<C-f5>" #'delete-window)
+(bind-key "<s-f5>" #'delete-frame)
+
+(bind-key "s-w" #'delete-window)
+(bind-key "s-t" #'split-window-right)
+(bind-key "s-T" #'split-window-below)
+(bind-key "s-s" #'save-buffer)
+(bind-key "s-n" #'make-frame-command)
+(bind-key "s-q" #'save-buffers-kill-terminal)
+(bind-key "s-<" #'other-window)
+(bind-key "s-v" #'yank)
+(bind-key "s-c" #'kill-ring-save)
+(bind-key "s-x" #'kill-region)
+(bind-key "s-V" #'counsel-yank-pop)
+(bind-key "s-z" #'undo-tree-undo)
+(bind-key "s-Z" #'undo-tree-visualize)
+(bind-key "<M-delete>" #'kill-word)
+(bind-key "s--" #'tracking-next-buffer)
+(bind-key "s-d" #'my-duplicate-thing)
+(bind-key "s-'" #'reload-config)
+(bind-key "s-e" #'ivy-switch-buffer)
+
+
+(use-package sudo-edit)
+
+(defun select-current-line ()
+  "Select the current line"
+  (interactive)
+  (end-of-line) ; move to end of line
+  (set-mark (line-beginning-position)))
+
+(bind-key "s-;" #'select-current-line)
+
+(defun move-line-up ()
+  "Move up the current line."
+  (interactive)
+  (transpose-lines 1)
+  (forward-line -2)
+  (indent-according-to-mode))
+
+(defun move-line-down ()
+  "Move down the current line."
+  (interactive)
+  (forward-line 1)
+  (transpose-lines 1)
+  (forward-line -1)
+  (indent-according-to-mode))
+
+(bind-key "<M-S-up>" #'move-line-up)
+(bind-key "<M-S-down>" #'move-line-down)
 
 
 (provide 'config)

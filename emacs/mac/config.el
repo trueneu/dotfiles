@@ -396,52 +396,12 @@
 
 (setq auth-sources '("~/.authinfo"))
 
-(add-to-list 'forge-alist '("gitlab.booking.com" "gitlab.booking.com/api/v4" "gitlab.booking.com" forge-gitlab-repository))
-
-
 ;; slack
 (defvar my:slack-started nil)
 
 (use-package alert
   :after slack
   :init
-  ;; (alert-define-style
-  ;;  'default-style
-  ;;  :title "Default alert style"
-  ;;  :notifier
-  ;;  (lambda (info)
-  ;;    ;; The message text is :message
-  ;;    (plist-get info :message)
-  ;;    ;; The :title of the alert
-  ;;    (plist-get info :title)
-  ;;    ;; The :category of the alert
-  ;;    (plist-get info :category)
-  ;;    ;; The major-mode this alert relates to
-  ;;    (plist-get info :mode)
-  ;;    ;; The buffer the alert relates to
-  ;;    (plist-get info :buffer)
-  ;;    ;; Severity of the alert.  It is one of:
-  ;;    ;;   `urgent'
-  ;;    ;;   `high'
-  ;;    ;;   `moderate'
-  ;;    ;;   `normal'
-  ;;    ;;   `low'
-  ;;    ;;   `trivial'
-  ;;    (plist-get info :severity)
-  ;;    ;; Whether this alert should persist, or fade away
-  ;;    (plist-get info :persistent)
-  ;;    ;; Data which was passed to `alert'.  Can be
-  ;;    ;; anything.
-  ;;    (plist-get info :data))
-
-  ;;  ;; Removers are optional.  Their job is to remove
-  ;;  ;; the visual or auditory effect of the alert.
-  ;;  ;; :remover
-  ;;  ;; (lambda (info)
-  ;;  ;;   ;; It is the same property list that was passed to
-  ;;  ;;   ;; the notifier function.
-  ;;  ;;   )
-  ;;  )
   (setq alert-default-style 'notifier))
 
 (use-package slack
@@ -599,14 +559,35 @@
 (bind-key "s-Z" #'undo-tree-visualize)
 (bind-key "<M-delete>" #'kill-word)
 (bind-key "s--" #'tracking-next-buffer)
+(bind-key "s-d" #'my-duplicate-thing)
+(bind-key "s-'" #'reload-config)
+(bind-key "s-e" #'ivy-switch-buffer)
 
-;; (customize-set-variable
-;;  'display-buffer-alist
-;;  '("\\*Slack - Booking" (display-buffer-same-window)))
+(defun select-current-line ()
+  "Select the current line"
+  (interactive)
+  (end-of-line) ; move to end of line
+  (set-mark (line-beginning-position)))
 
-(customize-set-variable
- 'display-buffer-alist
- nil)
+(bind-key "s-;" #'select-current-line)
+
+(defun move-line-up ()
+  "Move up the current line."
+  (interactive)
+  (transpose-lines 1)
+  (forward-line -2)
+  (indent-according-to-mode))
+
+(defun move-line-down ()
+  "Move down the current line."
+  (interactive)
+  (forward-line 1)
+  (transpose-lines 1)
+  (forward-line -1)
+  (indent-according-to-mode))
+
+(bind-key "<M-S-up>" #'move-line-up)
+(bind-key "<M-S-down>" #'move-line-down)
 
 ;; todo: make slack alerts closable
 ;; make buffers appear where I open them

@@ -183,7 +183,8 @@ define_keymap(re.compile(browserStr, re.IGNORECASE),{
     K("RC-X"): K("Alt-F4"),          # doesn't work :)
 })
 
-define_keymap(None,{
+#define_keymap(None,{
+define_keymap(lambda wm_class: wm_class.casefold() not in editors,{
     # Basic App hotkey functions
     K("RC-X"): K("Alt-F4"),
     K("RC-J"): K("Alt-F9"),
@@ -216,9 +217,9 @@ define_keymap(None,{
 
     # FIXME: Maybe return those
     K("RC-Left"): K("Home"),                      # Beginning of Line
-    K("Super-A"): K("Home"),                      # Beginning of Line
     K("RC-Shift-Left"): K("Shift-Home"),          # Select all to Beginning of Line
     K("RC-Right"): K("End"),                      # End of Line
+    K("Super-A"): K("Home"),                      # Beginning of Line
     K("Super-D"): K("End"),                       # End of Line
     K("RC-Shift-Right"): K("Shift-End"),          # Select all to End of Line
 
