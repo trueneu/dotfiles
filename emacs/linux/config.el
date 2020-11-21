@@ -59,8 +59,8 @@
 ;;     (set-fontset-font "fontset-default" 'unicode "Apple Color Emoji" nil 'prepend)
 ;;   (warn "This Emacs version is too old to properly support emoji."))
 
-;; (unbind-key "C-x C-f") ;; find-file-read-only
-;; (unbind-key "C-x C-d") ;; list-directory
+(unbind-key "C-x C-f") ;; find-file-read-only
+(unbind-key "C-x C-d") ;; list-directory
 (unbind-key "C-z") ;; suspend-frame
 (unbind-key "M-o") ;; facemenu-mode
 (unbind-key "<mouse-2>") ;; pasting with mouse-wheel click
@@ -229,3 +229,235 @@
   (newline-and-indent))
 
 (bind-key "s-<return>" #'pt/eol-then-newline)
+
+(bind-key "s-w" #'kill-this-buffer)
+
+(use-package sudo-edit)
+
+(defun dired-up-directory-same-buffer ()
+  "Go up in the same buffer."
+  (find-alternate-file ".."))
+
+(defun my-dired-mode-hook ()
+  (put 'dired-find-alternate-file 'disabled nil) ; Disables the warning.
+  (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
+  (define-key dired-mode-map (kbd "^") (lambda () (interactive) (dired-up-directory-same-buffer))))
+
+(add-hook 'dired-mode-hook #'my-dired-mode-hook)
+
+(setq dired-use-ls-dired nil)
+
+(global-so-long-mode)
+
+(use-package duplicate-thing
+  :init
+  (defun my-duplicate-thing ()
+    "Duplicate thing at point without changing the mark."
+    (interactive)
+    (save-mark-and-excursion (duplicate-thing 1)))
+  :bind (("C-c u" . my-duplicate-thing)
+         ("C-c C-u" . my-duplicate-thing)))
+
+;; todo: add :ensure t to each use-package?
+
+(setq read-process-output-max (* 1024 1024)) ; 1mb
+
+(use-package which-key
+  :custom
+  (which-key-setup-side-window-bottom)
+  (which-key-enable-extended-define-key t)
+  :config
+  (which-key-mode)
+  (which-key-setup-minibuffer))
+
+(defun revert-to-two-windows ()
+  "Delete all other windows and split it into two."
+  (interactive)
+  (delete-other-windows)
+  (split-window-right))
+
+(bind-key "C-x 1" #'revert-to-two-windows)
+(bind-key "C-x !" #'delete-other-windows) ;; Access to the old keybinding.
+
+(bind-key "s-g" #'abort-recursive-edit)
+
+(defun kill-this-buffer ()
+  "Kill the current buffer."
+  (interactive)
+  (kill-buffer nil)
+  )
+
+(bind-key "C-x k" #'kill-this-buffer)
+(bind-key "C-x K" #'kill-buffer)
+
+(defun copy-file-name-to-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode) default-directory (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
+
+(bind-key "C-c P" #'copy-file-name-to-clipboard)
+
+(use-package ace-window
+  :config
+  ;; Show the window designators in the modeline.
+  (ace-window-display-mode)
+
+  ;; Make the number indicators a little larger. I'm getting old.
+  ; (set-face-attribute 'aw-leading-char-face nil :height 1.0 :background "black")
+
+  (defun my-ace-window (args)
+    "As ace-window, but hiding the cursor while the action is active."
+    (interactive "P")
+    (cl-letf
+        ((cursor-type nil)
+         (cursor-in-non-selected-window nil))
+      (ace-window nil)))
+
+
+  :bind (("s-," . my-ace-window))
+  :custom
+  (aw-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n ?s) "Designate windows by home row keys, not numbers.")
+  (aw-background nil))
+
+(setq enable-recursive-minibuffers t)
+(minibuffer-depth-indicate-mode)
+
+(defun switch-to-scratch-buffer ()
+  "Switch to the current session's scratch buffer."
+  (interactive)
+  (switch-to-buffer "*scratch*"))
+
+(bind-key "s-s" #'switch-to-scratch-buffer)
+
+;; skipped orgmode section for now -- it seems very complex
+
+(use-package magit
+  :diminish magit-auto-revert-mode
+  :diminish auto-revert-mode
+  :bind (("C-c g" . #'magit-status))
+  :custom
+  (magit-repository-directories '(("~/git_tree" . 1)))
+  :config
+  (add-to-list 'magit-no-confirm 'stage-all-changes))
+
+(use-package libgit)
+
+(use-package magit-libgit
+  :after (magit libgit))
+
+(use-package forge
+  :after magit)
+
+;; todo : no ssh-agent access seemingly
+
+(use-package projectile
+  :init
+  (setq projectile-keymap-prefix (kbd "C-c p"))
+  :diminish
+  :bind (("C-c k" . #'projectile-kill-buffers)
+         ("C-c M" . #'projectile-compile-project))
+  :custom
+  (projectile-completion-system 'ivy)
+  (projectile-enable-caching t)
+  :config
+  (projectile-mode)
+  (setq projectile-project-search-path '("~/git_tree")))
+
+(use-package ivy
+  :diminish
+  :custom
+  (ivy-height 30)
+  (ivy-use-virtual-buffers t)
+  (ivy-use-selectable-prompt t)
+  :config
+  (ivy-mode 1)
+
+  :bind (("C-c C-r" . #'ivy-resume)
+         ("C-c s"   . #'swiper-thing-at-point)
+         ("C-s"     . #'swiper)))
+
+(use-package ivy-rich
+  :custom
+  (ivy-virtual-abbreviate 'full)
+  (ivy-rich-switch-buffer-align-virtual-buffer nil)
+  (ivy-rich-path-style 'full)
+  :config
+  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+  (ivy-rich-mode))
+
+(use-package counsel
+  :init
+  (counsel-mode 1)
+
+  :bind (("C-c ;" . #'counsel-M-x)
+         ("C-c U" . #'counsel-unicode-char)
+         ("C-c i" . #'counsel-imenu)
+         ("C-x f" . #'counsel-find-file)
+         ("C-c y" . #'counsel-yank-pop)
+         ("C-c r" . #'counsel-recentf)
+         ("C-c v" . #'counsel-switch-buffer-other-window)
+         ("C-c H" . #'counsel-projectile-rg)
+         ("C-h h" . #'counsel-command-history)
+         ("C-x C-f" . #'counsel-find-file)
+         :map ivy-minibuffer-map
+         ("C-r" . counsel-minibuffer-history))
+  :diminish)
+
+(use-package counsel-projectile
+  :bind (("C-c f" . #'counsel-projectile)
+         ("C-c F" . #'counsel-projectile-switch-project)))
+
+;; todo read on flycheck
+(use-package flycheck
+  :after org
+  :hook
+  (org-src-mode . disable-flycheck-for-elisp)
+  :custom
+  (flycheck-emacs-lisp-initialize-packages t)
+  (flycheck-display-errors-delay 0.1)
+  :config
+  (global-flycheck-mode)
+  (flycheck-set-indication-mode 'left-margin)
+
+  (defun disable-flycheck-for-elisp ()
+    (setq-local flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+
+  (add-to-list 'flycheck-checkers 'proselint)
+  (setq-default flycheck-disabled-checkers '(haskell-stack-ghc)))
+
+(use-package flycheck-inline
+  :config (global-flycheck-inline-mode))
+
+(use-package deadgrep
+  :bind (("C-c h" . #'deadgrep)))
+
+;; todo: strange keybind
+(use-package visual-regexp
+  :bind (("C-c 5" . #'vr/replace)))
+
+;; todo: bind doesn't work
+(use-package company
+  :diminish
+  :bind (("C-." . #'company-capf))
+  :hook (prog-mode . company-mode)
+  :custom
+  (company-dabbrev-downcase nil "Don't downcase returned candidates.")
+  (company-show-numbers t "Numbers are helpful.")
+  (company-tooltip-limit 20 "The more the merrier.")
+  (company-tooltip-idle-delay 0.4 "Faster!")
+  (company-async-timeout 20 "Some requests can take a long time. That's fine.")
+  :config
+
+  ;; Use the numbers 0-9 to select company completion candidates
+  (let ((map company-active-map))
+    (mapc (lambda (x) (define-key map (format "%d" x)
+			`(lambda () (interactive) (company-complete-number ,x))))
+	  (number-sequence 0 9))))
+
+;; todo: lsp section omitted
+
+(provide 'config)
+;;; config.el ends here
