@@ -55,6 +55,10 @@
 ;; (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 ;; (use-package gnu-elpa-keyring-update)
 
+(defvar work-environment-p nil)
+(if (or (file-exists-p "/Users/pgurkov") (file-exists-p "/home/pgurkov"))
+    (setq work-environment-p t))
+
 (setq
  ;; No need to see GNU agitprop.
  inhibit-startup-screen t
@@ -232,6 +236,30 @@
 ;; enable scrolling to the beginning/end of file
 (setq scroll-error-top-bottom t)
 
+;; flycheck
+(use-package flycheck
+  :after org
+  :hook
+  (org-src-mode . disable-flycheck-for-elisp)
+  :custom
+  (flycheck-emacs-lisp-initialize-packages t)
+  (flycheck-display-errors-delay 0.1)
+  :config
+  (global-flycheck-mode)
+  (flycheck-set-indication-mode 'left-margin)
+
+  (defun disable-flycheck-for-elisp ()
+    (setq-local flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+
+  (add-to-list 'flycheck-checkers 'proselint)
+  (setq-default flycheck-disabled-checkers '(haskell-stack-ghc)))
+
+(use-package flycheck-inline
+  :config (global-flycheck-inline-mode))
+
+;; deadgrep
+(use-package deadgrep
+  :bind (("C-c h" . #'deadgrep)))
 
 ;; tabs (do I really need those?..)
 (use-package centaur-tabs
@@ -298,6 +326,7 @@
   (ivy-height 30)
   (ivy-use-virtual-buffers t)
   (ivy-use-selectable-prompt t)
+  (counsel-mark-ring-sort-selections nil)
   :config
   (ivy-mode 1)
 
@@ -305,9 +334,9 @@
          ("C-c s"   . #'swiper-thing-at-point)
          ("C-s"     . #'swiper)))
 
-;; (setq ivy-re-builders-alist
-;;       '((swiper . ivy--regex-plus)
-;;         (t      . ivy--regex-fuzzy)))
+(setq ivy-re-builders-alist
+      '((swiper . ivy--regex-plus)
+        (t      . ivy--regex-fuzzy)))
 
 (use-package ivy-rich
   :custom
@@ -562,6 +591,7 @@
 (bind-key "s-d" #'my-duplicate-thing)
 (bind-key "s-'" #'reload-config)
 (bind-key "s-e" #'ivy-switch-buffer)
+(bind-key "s-E" #'projectile-recentf)
 
 (defun select-current-line ()
   "Select the current line"
@@ -589,5 +619,9 @@
 (bind-key "<M-S-up>" #'move-line-up)
 (bind-key "<M-S-down>" #'move-line-down)
 
+(bind-key "s-a" #'mark-whole-buffer)
+
 ;; todo: make slack alerts closable
 ;; make buffers appear where I open them
+
+(use-package eyebrowse)

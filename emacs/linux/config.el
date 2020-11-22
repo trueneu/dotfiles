@@ -425,6 +425,10 @@
          ("C-c s"   . #'swiper-thing-at-point)
          ("C-s"     . #'swiper)))
 
+(setq ivy-re-builders-alist
+      '((swiper . ivy--regex-plus)
+        (t      . ivy--regex-fuzzy)))
+
 (use-package ivy-rich
   :custom
   (ivy-virtual-abbreviate 'full)
