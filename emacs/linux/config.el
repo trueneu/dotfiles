@@ -408,6 +408,7 @@
 
 (use-package projectile
   :init
+;  (setq projectile-keymap-prefix (kbd "C-c p"))
   (setq projectile-keymap-prefix (kbd "C-c p"))
   :diminish
   :bind (("C-c k" . #'projectile-kill-buffers)
@@ -611,6 +612,22 @@
 (use-package dumb-jump
   :init
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+
+(use-package quelpa)
+
+(quelpa
+ '(quelpa-use-package
+   :fetcher git
+   :url "https://github.com/quelpa/quelpa-use-package.git"))
+
+(require 'quelpa-use-package)
+
+(use-package gdb-mi :quelpa (gdb-mi :fetcher git
+                                    :url "https://github.com/weirdNox/emacs-gdb.git"
+                                    :files ("*.el" "*.c" "*.h" "Makefile"))
+  :init
+  (fmakunbound 'gdb)
+  (fmakunbound 'gdb-enable-debug))
 
 (provide 'config)
 ;;; config.el ends here
