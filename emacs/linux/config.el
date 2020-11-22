@@ -124,6 +124,10 @@
   :config
   (keychain-refresh-environment))
 
+(defvar work-environment-p nil)
+(if (or (file-exists-p "/Users/pgurkov") (file-exists-p "/home/pgurkov"))
+    (setq work-environment-p t))
+
 (exec-path-from-shell-copy-env "SSH_AGENT_PID")
 (exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
 
@@ -544,8 +548,10 @@
 (bind-key "s-d" #'my-duplicate-thing)
 (bind-key "s-'" #'reload-config)
 (bind-key "s-e" #'ivy-switch-buffer)
+(bind-key "s-E" #'projectile-recentf)
 (bind-key "s-f" #'swiper)
 (bind-key "s-r" #'vr/replace)
+(bind-key "M-SPC" #'company-complete)
 
 (use-package sudo-edit)
 
@@ -574,6 +580,11 @@
 
 (bind-key "<M-S-up>" #'move-line-up)
 (bind-key "<M-S-down>" #'move-line-down)
+(bind-key "s-a" #'mark-whole-buffer)
+
+(use-package eyebrowse
+  :init
+  (eyebrowse-mode t))
 
 (provide 'config)
 ;;; config.el ends here

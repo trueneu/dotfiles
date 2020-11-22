@@ -59,6 +59,10 @@
 (if (or (file-exists-p "/Users/pgurkov") (file-exists-p "/home/pgurkov"))
     (setq work-environment-p t))
 
+(defvar linux-p nil)
+(if (string= system-type "gnu/linux")
+    (setq linux-p t))
+
 (setq
  ;; No need to see GNU agitprop.
  inhibit-startup-screen t
@@ -389,8 +393,6 @@
 ;; linux migration part
 (bind-key "s-w" #'kill-this-buffer)
 
-(use-package sudo-edit)
-
 (defun dired-up-directory-same-buffer ()
   "Go up in the same buffer."
   (find-alternate-file ".."))
@@ -547,6 +549,24 @@
 
 (use-package visual-regexp-steroids)
 
+(use-package company
+  :diminish
+  :bind (("C-." . #'company-capf))
+  :hook (prog-mode . company-mode)
+  :custom
+  (company-dabbrev-downcase nil "Don't downcase returned candidates.")
+  (company-show-numbers t "Numbers are helpful.")
+  (company-tooltip-limit 20 "The more the merrier.")
+  (company-tooltip-idle-delay 0.4 "Faster!")
+  (company-async-timeout 20 "Some requests can take a long time. That's fine.")
+  :config
+
+  ;; Use the numbers 0-9 to select company completion candidates
+  (let ((map company-active-map))
+    (mapc (lambda (x) (define-key map (format "%d" x)
+			`(lambda () (interactive) (company-complete-number ,x))))
+	  (number-sequence 0 9))))
+
 (defun kill-this-buffer ()
   "Kill the current buffer."
   (interactive)
@@ -592,6 +612,11 @@
 (bind-key "s-'" #'reload-config)
 (bind-key "s-e" #'ivy-switch-buffer)
 (bind-key "s-E" #'projectile-recentf)
+(bind-key "s-f" #'swiper)
+(bind-key "s-r" #'vr/replace)
+(bind-key "M-SPC" #'company-complete)
+
+(use-package sudo-edit)
 
 (defun select-current-line ()
   "Select the current line"
@@ -624,4 +649,12 @@
 ;; todo: make slack alerts closable
 ;; make buffers appear where I open them
 
-(use-package eyebrowse)
+(use-package eyebrowse
+  :init
+  (eyebrowse-mode t))
+
+(when work-environment-p
+  (load-file "~/.config/emacs/forge.el"))
+
+(provide 'config)
+;;; config.el ends here
