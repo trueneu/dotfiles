@@ -9,7 +9,7 @@
  '(doom-modeline-mode t)
  '(global-display-line-numbers-mode t)
  '(package-selected-packages
-   '(eyebrowse visual-regexp-steroids pcre2el company visual-regexp deadgrep flycheck-inline flycheck counsel-projectile counsel ivy-rich projectile forge magit-libgit transient libgit magit ace-window which-key duplicate-thing sudo-edit iedit ivy-avy avy color-theme-sanityinc-solarized expand-region multiple-cursors centaur-tabs tree-sitter-langs tree-sitter rainbow-delimiters dimmer diminish doom-modeline doom-themes all-the-icons-dired all-the-icons undo-tree keychain-environment gnu-elpa-keyring-update exec-path-from-shell use-package))
+   '(dumb-jump eyebrowse visual-regexp-steroids pcre2el company visual-regexp deadgrep flycheck-inline flycheck counsel-projectile counsel ivy-rich projectile forge magit-libgit transient libgit magit ace-window which-key duplicate-thing sudo-edit iedit ivy-avy avy color-theme-sanityinc-solarized expand-region multiple-cursors centaur-tabs tree-sitter-langs tree-sitter rainbow-delimiters dimmer diminish doom-modeline doom-themes all-the-icons-dired all-the-icons undo-tree keychain-environment gnu-elpa-keyring-update exec-path-from-shell use-package))
  '(projectile-mode t nil (projectile))
  '(tool-bar-mode nil))
 (custom-set-faces

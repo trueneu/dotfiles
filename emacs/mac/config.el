@@ -1,5 +1,7 @@
 (setq lexical-binding t)
 (setq gc-cons-threshold 100000000)
+
+(require 'use-package-ensure)
 (setq use-package-always-ensure t)
 
 ;; unbind cmd-keys
@@ -615,6 +617,8 @@
 (bind-key "s-f" #'swiper)
 (bind-key "s-r" #'vr/replace)
 (bind-key "M-SPC" #'company-complete)
+(bind-key "s-b" #'xref-find-definitions)
+(bind-key "s-B" #'xref-pop-marker-stack)
 
 (use-package sudo-edit)
 
@@ -646,12 +650,34 @@
 
 (bind-key "s-a" #'mark-whole-buffer)
 
+(defun mark-from-point-to-end-of-line ()
+  "Marks everything from point to end of line"
+  (interactive)
+  (set-mark (point))
+  (activate-mark)
+  (end-of-line))
+
+(defun mark-from-point-to-beginning-of-line ()
+  "Marks everything from point to beginning of line"
+  (interactive)
+  (set-mark (point))
+  (activate-mark)
+  (beginning-of-line))
+
+(bind-key "<S-s-right>" #'mark-from-point-to-end-of-line)
+(bind-key "<S-s-left>" #'mark-from-point-to-beginning-of-line)
+
+
 ;; todo: make slack alerts closable
 ;; make buffers appear where I open them
 
 (use-package eyebrowse
   :init
   (eyebrowse-mode t))
+
+(use-package dumb-jump
+  :init
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
 (when work-environment-p
   (load-file "~/.config/emacs/forge.el"))
