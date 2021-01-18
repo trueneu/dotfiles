@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+xrandr --output eDP-1 --auto --primary --mode 1920x1080 --rate 59.99
+# xrandr --output HDMI-0 --auto --right-of DP-0 --mode 2560x1440 --rate 99.95
