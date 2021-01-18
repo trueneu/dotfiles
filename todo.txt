@@ -7,3 +7,4 @@
 7. Close lid mechanics
 8. Automate GP incorporation
 9. Copy over emacs linux config
+10. Change workshell to bash
