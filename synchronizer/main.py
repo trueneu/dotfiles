@@ -127,7 +127,12 @@ def create_symlinks():
 
 
 def create_bin_symlinks():
-    run_shell('ls -1 | while read f ; do ln -s $HOME/git_tree/dotfiles/bin/$f $HOME/bin/$f ; done',
+    run_shell('ls -1 | while read f ; do '
+              'if [ -e $f-{target} ] ; '
+              'then ln -s $HOME/git_tree/dotfiles/bin/$f-{target} $HOME/bin/$f ; '
+              'else ln -s $HOME/git_tree/dotfiles/bin/$f $HOME/bin/$f ; '
+              'fi ; '
+              'done'.format(target=TARGET),
               GIT_ROOT + "/dotfiles/bin")
 
 
