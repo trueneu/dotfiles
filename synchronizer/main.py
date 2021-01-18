@@ -10,10 +10,12 @@ BIN = "{}/bin".format(HOME)
 FONTS_ROOT = "{}/.fonts".format(HOME)
 DOWNLOADS = "{}/Downloads".format(HOME)
 
+TARGET = "unknown"
 
 def parser_init():
     parser = argparse.ArgumentParser(description="Setup the system")
     parser.add_argument('action', metavar='action', nargs=1, type=str, choices=['install', 'symlinks'])
+    parser.add_argument('target', metavar='target', nargs=1, type=str, choices=['work', 'home'])
     return parser
 
 
@@ -43,11 +45,12 @@ def install_packages():
 
 def add_repos():
     mkdir(DOWNLOADS)
-    run_shell('/usr/bin/wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_10.0.3_all.deb', DOWNLOADS)
-    run_shell("sudo -S dpkg -i kxstudio-repos_10.0.3_all.deb", DOWNLOADS)
-    run_shell('''sudo -S mv 'home:manuelschneid3r.asc' $HOME''', '/etc/apt/trusted.gpg.d')
-    run_shell('wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo -S apt-key add -')
-    run_shell('echo "deb https://download.sublimetext.com/ apt/stable/" | sudo -S tee /etc/apt/sources.list.d/sublime-text.list')
+    if TARGET == "home":
+        run_shell('/usr/bin/wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_10.0.3_all.deb', DOWNLOADS)
+        run_shell("sudo -S dpkg -i kxstudio-repos_10.0.3_all.deb", DOWNLOADS)
+        run_shell('''sudo -S mv 'home:manuelschneid3r.asc' $HOME''', '/etc/apt/trusted.gpg.d')
+        run_shell('wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo -S apt-key add -')
+        run_shell('echo "deb https://download.sublimetext.com/ apt/stable/" | sudo -S tee /etc/apt/sources.list.d/sublime-text.list')
 
 
 def clone_go_repos():
@@ -116,7 +119,11 @@ def create_symlinks():
     }
 
     for k, v in links.items():
-        run_shell("ln -sf {} {}".format(GIT_ROOT + "/dotfiles/" + k, v))
+        source = GIT_ROOT + "/dotfiles/" + k
+        if os.path.exists(source + "-" + TARGET):
+            run_shell("ln -sf {} {}".format(source + "-" + TARGET, v))
+        else:
+            run_shell("ln -sf {} {}".format(source, v))
 
 
 def create_bin_symlinks():
@@ -152,6 +159,7 @@ def install_jetbrains_toolbox():
 
 def run():
     args = parser_init().parse_args()
+    TARGET = args.target[0]
     if args.action[0] == 'install':
         add_repos()
         install_packages()
