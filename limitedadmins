@@ -1,0 +1,6 @@
+# /etc/sudoers.d/limitedadmins
+%trueneu ALL=NOPASSWD: /usr/bin/systemctl restart xkeysnail.service
+%trueneu ALL=NOPASSWD: /usr/bin/systemctl start xkeysnail.service
+%trueneu ALL=NOPASSWD: /usr/bin/systemctl stop xkeysnail.service
+%trueneu ALL=NOPASSWD: /usr/bin/systemctl status xkeysnail.service
+%trueneu ALL=NOPASSWD: /usr/local/bin/revert-xkb-changes.sh
