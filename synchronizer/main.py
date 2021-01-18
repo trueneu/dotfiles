@@ -13,7 +13,7 @@ DOWNLOADS = "{}/Downloads".format(HOME)
 
 def parser_init():
     parser = argparse.ArgumentParser(description="Setup the system")
-    parser.add_argument('action', metavar='action', nargs=1, type=str, choices=['all', 'symlinks'])
+    parser.add_argument('action', metavar='action', nargs=1, type=str, choices=['install', 'symlinks'])
     return parser
 
 
@@ -24,15 +24,18 @@ def run_shell(cmd, wd=''):
 
 
 def mkdir(d):
-    os.mkdir(d)
+    try:
+        os.mkdir(d)
+    except FileExistsError:
+        pass 
 
 
 def install_packages():
     packages = ['python3-pip', 'emacs-nox', 'wmctrl', 'tmux', 'copyq', 'xclip', 'golang-go', 'dconf-editor', 'i3',
                 'rofi', 'feh', 'libxkbfile-dev', 'cmake', 'lxappearance', 'numlockx', 'xdotool', 'fzf',
-                'autotools', 'autoconf', 'libtool', 'libtool-bin', 'rofi-dev', 'libqalculate-dev', 'qalculate',
+                'autotools-dev', 'autoconf', 'libtool', 'libtool-bin', 'rofi-dev', 'libqalculate-dev', 'qalculate',
                 'clang', 'clangd', 'libstdc++-10-dev', 'libstdc++-10-doc', 'gcc-10', 'gcc-10-base', 'gcc-10-doc',
-                'jackd', 'qjackctl', 'cadence', 'silversearcher-ag', 'python-is-python3'
+                'silversearcher-ag', 'python-is-python3'
                 ]
     run_shell("sudo -S apt update")
     run_shell("sudo -S apt install -y {}".format(str.join(" ", packages)))
@@ -59,7 +62,7 @@ def clone_repos():
              'https://github.com/svenstaro/rofi-calc.git',
              ]
     for repo in repos:
-        run_shell("git clone {}".format(repo))
+        run_shell("git clone {}".format(repo), GIT_ROOT)
 
 
 def install_xkeysnail():
@@ -67,12 +70,12 @@ def install_xkeysnail():
 
 
 def install_kinto():
-    run_shell('./setup.py', GIT_ROOT + "/kinto/kinto")
+    run_shell('./setup.py', GIT_ROOT + "/kinto/")
 
 
 def install_clipper():
-    run_shell('go build', GIT_ROOT + "/src/github.com/wincent/clipper")
-    run_shell('cp clipper {}'.format(BIN), GIT_ROOT + "/src/github.com/wincent/clipper")
+    run_shell('go build', GO_ROOT + "/src/github.com/wincent/clipper")
+    run_shell('cp clipper {}'.format(BIN), GO_ROOT + "/src/github.com/wincent/clipper")
 
 
 def install_xkbswitch():
@@ -88,8 +91,8 @@ def install_rofi_calc():
     mkdir(GIT_ROOT + "/rofi-calc/build")
     run_shell("../configure", GIT_ROOT + "/rofi-calc/build")
     run_shell("make", GIT_ROOT + "/rofi-calc/build")
-    run_shell("make install", GIT_ROOT + "/rofi-calc/build")
-    run_shell("libtool --finish /usr/lib/x86_64-linux-gnu/rofi//", GIT_ROOT + "/rofi-calc/build")
+    run_shell("sudo -S make install", GIT_ROOT + "/rofi-calc/build")
+    run_shell("sudo -S libtool --finish /usr/lib/x86_64-linux-gnu/rofi//", GIT_ROOT + "/rofi-calc/build")
 
 
 def enable_services():
@@ -159,6 +162,10 @@ def run():
         mkdir(DOT_SSH)
         mkdir(CONFIG_ROOT)
         mkdir(CONFIG_ROOT + "/i3")
+        mkdir(FONTS_ROOT)
+        mkdir(CONFIG_ROOT + "/systemd/")
+        mkdir(CONFIG_ROOT + "/systemd/user")
+        mkdir(CONFIG_ROOT + "/copyq")
 
         clone_repos()
         clone_go_repos()
