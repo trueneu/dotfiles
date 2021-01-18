@@ -1,0 +1,9 @@
+1. Diverge to work/home configs
+2. Introduce relevant commands to the synchronizer
+3. Verify everything's working on working laptop (clipper, lang change, tmux copy-paste)
+4. Find a way to emulate QWERTY per-device
+5. Incorporate GP config
+6. Edit xrandr monitor config both on desktop and laptop
+7. Close lid mechanics
+8. Automate GP incorporation
+9. Copy over emacs linux config
