@@ -288,7 +288,7 @@ bindsym $mod+y [class="Sublime_text" instance="sublime_text"] focus
 bindsym $mod+u [class="Emacs" instance="emacs"] focus
 
 bindsym $mod+Shift+a exec uxterm
-bindsym $mod+Shift+e exec google-chrome
+bindsym $mod+Shift+e exec google-chrome --force-device-scale-factor=1.5
 bindsym $mod+Shift+apostrophe exec clion
 bindsym $mod+Shift+j exec pycharm
 bindsym $mod+Shift+i exec idea
@@ -318,3 +318,5 @@ bindsym $mod+Shift+F1 exec --no-startup-id ~/bin/wacom-next-monitor.sh
 bindsym $mod+Shift+F2 exec --no-startup-id ~/bin/wacom-precision-mode.sh
 bindsym $mod+numbersign exec --no-startup-id ~/bin/wacom-precision-mode.sh plus
 bindsym $mod+exclam exec --no-startup-id ~/bin/wacom-precision-mode.sh minus
+
+bindsym $mod+Shift+m exec --no-startup-id sudo /usr/bin/systemctl restart xkeysnail.service
