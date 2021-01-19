@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+CURRENT_LAYOUT=$(xkb-switch)
+
+if [ "$CURRENT_LAYOUT" == "us(dvp)" ] ; then
+   xkb-switch -s 'ru(dvp)'
+else
+   xkb-switch -s 'us(dvp)'
+fi

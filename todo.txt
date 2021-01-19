@@ -10,3 +10,4 @@
 10. Change workshell to bash
 11. Emacs local server ensure to run
 12. Sudoers to restart xkeysnail
+13. Emacs is missing fonts

@@ -80,4 +80,4 @@ UXTerm*translations:    #override \n\
 
 UXTerm*metaSendsEscape: true
 
-!Xft.dpi: 144
+Xft.dpi: 144

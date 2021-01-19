@@ -116,7 +116,7 @@ bindsym $mod+r layout toggle split
 bindsym $mod+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+# bindsym $mod+space focus mode_toggle
 
 # focus the parent container
 bindsym $mod+l focus parent
@@ -286,6 +286,7 @@ bindsym $mod+p [class="Joplin" instance="joplin"] focus
 bindsym $mod+comma [class="REAPER" instance="REAPER"] focus
 bindsym $mod+y [class="Sublime_text" instance="sublime_text"] focus
 bindsym $mod+u [class="Emacs" instance="emacs"] focus
+bindsym $mod+period [class="Slack" instance="slack"] focus
 
 bindsym $mod+Shift+a exec uxterm
 bindsym $mod+Shift+e exec google-chrome --force-device-scale-factor=1.5
@@ -293,13 +294,15 @@ bindsym $mod+Shift+apostrophe exec clion
 bindsym $mod+Shift+j exec pycharm
 bindsym $mod+Shift+i exec idea
 bindsym $mod+Shift+o exec doublecmd
-bindsym $mod+Shift+p exec joplin
+bindsym $mod+Shift+p exec joplin --force-device-scale-factor=1.5
 bindsym $mod+Shift+comma exec reaper
 bindsym $mod+Shift+y exec subl
 bindsym $mod+Shift+u exec emacsclient -c
+bindsym $mod+Shift+period exec slack --force-device-scale-factor=1.5
 
 # kb layout
-bindsym mod4+space exec --no-startup-id xkb-switch -n
+bindsym mod4+space exec --no-startup-id xkb
+bindsym $mod+space exec --no-startup-id xkb-switch -s 'us( )'
 
 # shutdown mode
 mode "mode_system" {

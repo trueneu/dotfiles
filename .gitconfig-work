@@ -1,0 +1,18 @@
+[alias]
+  hist = log --graph --color=always --pretty='[%C(cyan)%h%Creset]%C(bold cyan)%d%Creset %s' --all
+  co = checkout
+  branches = for-each-ref --sort=-committerdate refs/heads/
+[color]
+  ui = auto
+[push]
+  default = upstream
+[include]
+  path = ~/.gitconfig.booking
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[user]
+	name = Pavel Gurkov
+	email = pavel.gurkov@booking.com
