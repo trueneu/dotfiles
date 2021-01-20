@@ -12,7 +12,7 @@ general {
 order += "wireless wlo1"
 #order += "ethernet enp0s31f6"
 order += "battery 0"
-#order += "cpu_temperature 0"
+order += "cpu_temperature 0"
 order += "memory"
 order += "load"
 order += "tztime local"
@@ -56,10 +56,11 @@ tztime berlin {
 }
 load {
         format = "%5min"
+        max_threshold = "8"
 }
 cpu_temperature 0 {
         format = "T: %degrees °C"
-        path = "/sys/devices/platform/coretemp.0/temp1_input"
+        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon5/temp1_input"
 }
 memory {
         format = "%used"
