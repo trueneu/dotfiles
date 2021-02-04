@@ -281,6 +281,7 @@ bindsym $mod+e [class="Google-chrome" instance="google-chrome"] focus
 bindsym $mod+apostrophe [class="jetbrains-clion" instance="jetbrains-clion"] focus
 bindsym $mod+j [class="jetbrains-pycharm" instance="jetbrains-pycharm"] focus
 bindsym $mod+i [class="jetbrains-idea" instance="jetbrains-idea"] focus
+bindsym $mod+k [class="jetbrains-goland" instance="jetbrains-goland"] focus
 bindsym $mod+o [class="Doublecmd" instance="doublecmd"] focus
 bindsym $mod+p [class="Joplin" instance="joplin"] focus
 bindsym $mod+comma [class="REAPER" instance="REAPER"] focus
@@ -292,9 +293,10 @@ bindsym $mod+Shift+a exec uxterm
 bindsym $mod+Shift+e exec google-chrome --force-device-scale-factor=1.5
 bindsym $mod+Shift+apostrophe exec clion
 bindsym $mod+Shift+j exec pycharm
+bindsym $mod+Shift+k exec goland
 bindsym $mod+Shift+i exec idea
 bindsym $mod+Shift+o exec doublecmd
-bindsym $mod+Shift+p exec joplin --force-device-scale-factor=1.5
+bindsym $mod+Shift+p exec joplin
 bindsym $mod+Shift+comma exec reaper
 bindsym $mod+Shift+y exec subl
 bindsym $mod+Shift+u exec emacsclient -c

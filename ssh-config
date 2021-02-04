@@ -8,3 +8,13 @@ KeepAlive yes
 VerifyHostKeyDNS yes
 StrictHostKeyChecking no
 ForwardX11 no
+
+Host ssh.booking.com citadel-* *citadel*.booking.com shell-* *.shell.booking.com
+    ForwardAgent        yes
+    User                pgurkov
+    ProxyCommand        none
+
+Host !gitlab.booking.com !*.dev.booking.com !hadoop-*.fab4.prod.booking.com *-?? *-??? *-???? *-????? 10.* *.booking.com
+    ForwardAgent        yes
+    User                pgurkov
+    ProxyCommand        ssh -q citadel.booking.com ssh-proxy %h %p
