@@ -291,6 +291,7 @@ bindsym $mod+period [class="Slack" instance="slack"] focus
 
 bindsym $mod+Shift+a exec uxterm
 bindsym $mod+Shift+e exec google-chrome --force-device-scale-factor=1.5
+bindsym $mod+Shift+x exec google-chrome --force-device-scale-factor=1.0
 bindsym $mod+Shift+apostrophe exec clion
 bindsym $mod+Shift+j exec pycharm
 bindsym $mod+Shift+k exec goland
