@@ -19,14 +19,14 @@ else
     fi
 fi
 
-xsetwacom set "Wacom Intuos BT S Pen stylus" maptooutput $NEXT_MONITOR
+xsetwacom set "Wacom Intuos Pro M Pen stylus" maptooutput $NEXT_MONITOR
+xsetwacom set "Wacom Intuos Pro M Pen eraser" maptooutput $NEXT_MONITOR
 echo -n $NEXT_MONITOR > $CURRENT_STATE_FILE
 
 if [ "$NEXT_MONITOR" == "HEAD-0" ] ; then
     echo -n "HEAD-1" > $NEXT_STATE_FILE
+elif [ "$NEXT_MONITOR" == "HEAD-1" ] ; then
+    echo -n "HEAD-2" > $NEXT_STATE_FILE
 else
     echo -n "HEAD-0" > $NEXT_STATE_FILE
 fi
-    
-
-
