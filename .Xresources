@@ -81,3 +81,4 @@ UXTerm*translations:    #override \n\
 UXTerm*metaSendsEscape: true
 
 Xft.dpi: 144
+Xcursor.size: 64

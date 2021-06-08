@@ -221,24 +221,49 @@ bar {
     }
 }
 
-for_window [class="copyq" instance="copyq"] floating enable resize set 600 400
+for_window [class="copyq" instance="copyq"] floating enable resize set 1000 700
 
 focus_follows_mouse no
 
 #default_border none
 
-workspace 1 output HDMI-0
-workspace 3 output HDMI-0
-workspace 5 output HDMI-0
-workspace 7 output HDMI-0
-workspace 9 output HDMI-0
+# workspace 1 output HDMI-0
+# workspace 3 output HDMI-0
+# workspace 5 output HDMI-0
+# workspace 7 output HDMI-0
+# workspace 9 output HDMI-0
 
 
-workspace 2 output DVI-D-0
-workspace 4 output DVI-D-0
-workspace 6 output DVI-D-0
-workspace 8 output DVI-D-0
-workspace 10 output DVI-D-0
+# workspace 2 output DVI-D-0
+# workspace 4 output DVI-D-0
+# workspace 6 output DVI-D-0
+# workspace 8 output DVI-D-0
+# workspace 10 output DVI-D-0
+
+workspace "1: term" output DP-1
+workspace "2: browser" output DP-2
+workspace "3: slack" output eDP-1
+workspace "4: idea" output DP-1
+workspace "5: pycharm" output DP-1
+workspace "6: clion" output DP-1
+# workspace 7 output HDMI-0
+# workspace 8 output DVI-D-0
+# workspace 9 output HDMI-0
+# workspace 10 output DVI-D-0
+
+assign [class="UXTerm"] -> term
+assign [class="Google-chrome"] -> browser
+assign [class="jetbrains-clion"] -> clion
+assign [class="jetbrains-pycharm"] -> pycharm
+assign [class="jetbrains-idea"] -> idea
+assign [class="Slack" instance="slack"] -> slack
+# bindsym $mod+k [class="jetbrains-goland" instance="jetbrains-goland"] focus
+# bindsym $mod+o [class="Doublecmd" instance="doublecmd"] focus
+# bindsym $mod+p [class="Joplin" instance="joplin"] focus
+# bindsym $mod+comma [class="REAPER" instance="REAPER"] focus
+# #bindsym $mod+y [class="Sublime_text" instance="sublime_text"] focus
+# bindsym $mod+u [class="Emacs" instance="emacs"] focus
+# bindsym $mod+y [class="Google-chrome" instance="crx_ekglgdmmidoibacfccdnphcemdganldg"] focus
 
 # lock
 
@@ -270,7 +295,7 @@ exec_always --no-startup-id xset r rate 300 30
 exec_always --no-startup-id ~/bin/xsetwacom.sh
 
 # wallpaper
-exec --no-startup-id feh --bg-scale ~/Pictures/wallpapers/10-13.jpg
+exec --no-startup-id feh --bg-scale ~/Pictures/wallpapers/10-13.jpg ~/Pictures/wallpapers/10-13.jpg ~/Pictures/wallpapers/10-13.jpg
 
 # numlock
 exec --no-startup-id numlockx on
@@ -302,7 +327,7 @@ bindsym $mod+Shift+p exec joplin
 bindsym $mod+Shift+comma exec reaper
 #bindsym $mod+Shift+y exec subl
 bindsym $mod+Shift+u exec emacsclient -c
-bindsym $mod+Shift+period exec slack --force-device-scale-factor=1.5
+bindsym $mod+Shift+period exec slack --force-device-scale-factor=1.25
 
 # kb layout
 bindsym mod4+space exec --no-startup-id xkb

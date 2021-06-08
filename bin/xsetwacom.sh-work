@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+xsetwacom.sh-common
+
+xsetwacom set "Wacom Intuos Pro M Pen stylus" maptooutput DP-1

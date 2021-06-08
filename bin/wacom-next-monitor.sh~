@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-STATE_FILE=/tmp/wacom-next-monitor
-
-if [ -f $STATE_FILE ] ; then
-    NEXT_MONITOR=`cat $STATE_FILE`
-else
-    NEXT_MONITOR=HEAD-1
-fi

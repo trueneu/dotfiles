@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+NEXT_STATE_FILE=/tmp/wacom-next-monitor
+CURRENT_STATE_FILE=/tmp/wacom-current-monitor
+PRECISION_MODE_STATE_FILE=/tmp/wacom-precision-mode
+
+if [ -f $PRECISION_MODE_STATE_FILE ] ; then
+    if [ -f $CURRENT_STATE_FILE ] ; then
+	NEXT_MONITOR=`cat $CURRENT_STATE_FILE`
+    else
+	NEXT_MONITOR=DP-1
+    fi
+    rm $PRECISION_MODE_STATE_FILE
+else
+    if [ -f $NEXT_STATE_FILE ] ; then
+	NEXT_MONITOR=`cat $NEXT_STATE_FILE`
+    else
+	NEXT_MONITOR=DP-2
+    fi
+fi
+
+xsetwacom set "Wacom Intuos Pro M Pen stylus" maptooutput $NEXT_MONITOR
+xsetwacom set "Wacom Intuos Pro M Pen eraser" maptooutput $NEXT_MONITOR
+echo -n $NEXT_MONITOR > $CURRENT_STATE_FILE
+
+if [ "$NEXT_MONITOR" == "DP-1" ] ; then
+    echo -n "DP-2" > $NEXT_STATE_FILE
+elif [ "$NEXT_MONITOR" == "DP-2" ] ; then
+    echo -n "eDP-1" > $NEXT_STATE_FILE
+else
+    echo -n "DP-1" > $NEXT_STATE_FILE
+fi
