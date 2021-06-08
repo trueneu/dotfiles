@@ -240,23 +240,24 @@ focus_follows_mouse no
 # workspace 8 output DVI-D-0
 # workspace 10 output DVI-D-0
 
-workspace "1: term" output DP-1
-workspace "2: browser" output DP-2
-workspace "3: slack" output eDP-1
-workspace "4: idea" output DP-1
-workspace "5: pycharm" output DP-1
-workspace "6: clion" output DP-1
+workspace 1 output DP-1
+workspace 2 output DP-2
+workspace 3 output eDP-1
+
+workspace 4 output DP-1
+workspace 5 output DP-1
+workspace 6 output DP-1
 # workspace 7 output HDMI-0
 # workspace 8 output DVI-D-0
 # workspace 9 output HDMI-0
 # workspace 10 output DVI-D-0
 
-assign [class="UXTerm"] -> term
-assign [class="Google-chrome"] -> browser
-assign [class="jetbrains-clion"] -> clion
-assign [class="jetbrains-pycharm"] -> pycharm
-assign [class="jetbrains-idea"] -> idea
-assign [class="Slack" instance="slack"] -> slack
+assign [class="UXTerm"] 1
+assign [class="Google-chrome"] 2
+assign [class="jetbrains-clion"] 6
+assign [class="jetbrains-pycharm"] 5
+assign [class="jetbrains-idea"] 4
+assign [class="Slack" instance="slack"] 3
 # bindsym $mod+k [class="jetbrains-goland" instance="jetbrains-goland"] focus
 # bindsym $mod+o [class="Doublecmd" instance="doublecmd"] focus
 # bindsym $mod+p [class="Joplin" instance="joplin"] focus
@@ -268,6 +269,8 @@ assign [class="Slack" instance="slack"] -> slack
 # lock
 
 bindsym $mod+semicolon exec ~/bin/i3lock.sh
+
+exec_always --no-startup-id dunst ~/.config/dunst/dunstrc
 
 exec --no-startup-id xrdb -merge ~/.Xresources
 
