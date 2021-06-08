@@ -285,9 +285,10 @@ bindsym $mod+k [class="jetbrains-goland" instance="jetbrains-goland"] focus
 bindsym $mod+o [class="Doublecmd" instance="doublecmd"] focus
 bindsym $mod+p [class="Joplin" instance="joplin"] focus
 bindsym $mod+comma [class="REAPER" instance="REAPER"] focus
-bindsym $mod+y [class="Sublime_text" instance="sublime_text"] focus
+#bindsym $mod+y [class="Sublime_text" instance="sublime_text"] focus
 bindsym $mod+u [class="Emacs" instance="emacs"] focus
 bindsym $mod+period [class="Slack" instance="slack"] focus
+bindsym $mod+y [class="Google-chrome" instance="crx_ekglgdmmidoibacfccdnphcemdganldg"] focus
 
 bindsym $mod+Shift+a exec uxterm
 bindsym $mod+Shift+e exec google-chrome --force-device-scale-factor=1.5
@@ -299,7 +300,7 @@ bindsym $mod+Shift+i exec idea
 bindsym $mod+Shift+o exec doublecmd
 bindsym $mod+Shift+p exec joplin
 bindsym $mod+Shift+comma exec reaper
-bindsym $mod+Shift+y exec subl
+#bindsym $mod+Shift+y exec subl
 bindsym $mod+Shift+u exec emacsclient -c
 bindsym $mod+Shift+period exec slack --force-device-scale-factor=1.5
 
