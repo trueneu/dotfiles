@@ -1,5 +1,8 @@
-theme = "solarized-light"
-icons = "awesome5"
+[theme]
+name = "solarized-light"
+
+[icons]
+name = "awesome5"
 
 [[block]]
 block = "focused_window"
@@ -29,6 +32,26 @@ show_marks = "all"
 
 # [[block]]
 # block = "notify"
+
+
+[[block]]
+block = "music"
+# player = "chromium.instance1767328"
+buttons = ["prev", "play", "next"]
+max_width = 40
+format = "{combo}"
+
+[block.theme_overrides]
+idle_bg = "#002b36" # base03
+idle_fg = "#93a1a1" # base1
+info_bg = "#268bd2" # blue
+info_fg = "#002b36" # base03
+good_bg = "#859900" # green
+good_fg = "#002b36" # base03
+warning_bg = "#b58900" # yellow
+warning_fg = "#002b36" # base03
+critical_bg = "#dc322f" # red
+critical_fg = "#002b36" # base03
 
 
 [[block]]

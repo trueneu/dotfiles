@@ -74,6 +74,11 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioPause exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
@@ -224,7 +229,7 @@ bar {
 #  	status_command i3blocks -c ~/.config/i3/i3blocks.conf
 	tray_output primary
 
-	font pango:SF Pro Text Medium 10, Font Awesome 5 Free 8
+	font pango:Font Awesome 5 Free, SF Pro Text Medium 8
 	# font pango:Font Awesome 5 Free 8
 
 	position bottom
@@ -363,11 +368,12 @@ bindsym $mod+i exec --no-startup-id wmctrl.py jetbrains-idea.jetbrains-idea
 bindsym $mod+k exec --no-startup-id wmctrl.py jetbrains-goland.jetbrains-goland
 bindsym $mod+o exec --no-startup-id wmctrl.py doublecmd.Doublecmd
 bindsym $mod+p exec --no-startup-id wmctrl.py joplin.Joplin
-bindsym $mod+comma exec --no-startup-id wmctrl.py REAPER.REAPER
+#bindsym $mod+comma exec --no-startup-id wmctrl.py REAPER.REAPER
 #bindsym $mod+y [class="Sublime_text" instance="sublime_text"] focus
 bindsym $mod+u exec --no-startup-id wmctrl.py emacs.Emacs
 bindsym $mod+period exec --no-startup-id wmctrl.py slack.Slack
 bindsym $mod+y exec --no-startup-id wmctrl.py crx_ekglgdmmidoibacfccdnphcemdganldg.Google-chrome
+bindsym $mod+comma exec --no-startup-id wmctrl.py "youtube"
 
 bindsym $mod+Shift+a exec --no-startup-id uxterm
 bindsym $mod+Shift+e exec google-chrome --force-device-scale-factor=1.5
@@ -378,10 +384,11 @@ bindsym $mod+Shift+k exec goland
 bindsym $mod+Shift+i exec idea
 bindsym $mod+Shift+o exec doublecmd
 bindsym $mod+Shift+p exec joplin
-bindsym $mod+Shift+comma exec reaper
+#bindsym $mod+Shift+comma exec reaper
 #bindsym $mod+Shift+y exec subl
 bindsym $mod+Shift+u exec emacsclient -c
 bindsym $mod+Shift+period exec slack --force-device-scale-factor=1.25
+bindsym $mod+Shift+comma exec youtube-music
 
 # kb layout
 bindsym mod4+space exec --no-startup-id xkb
