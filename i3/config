@@ -15,26 +15,42 @@ exec --no-startup-id ~/bin/xprofile.sh
 set $mod Mod1+Mod4+Control
 
 # colors
-set $base00 #101218
-set $base01 #1f222d
-set $base02 #252936
-set $base03 #7780a1
-set $base04 #C0C5CE
-set $base05 #d1d4e0
-set $base06 #C9CCDB
-set $base07 #ffffff
-set $base08 #ee829f
-set $base09 #f99170
-set $base0A #ffefcc
-set $base0B #a5ffe1
-set $base0C #97e0ff
-set $base0D #97bbf7
-set $base0E #c0b7f9
-set $base0F #fcc09e
+# set $base00 #101218
+# set $base01 #1f222d
+# set $base02 #252936
+# set $base03 #7780a1
+# set $base04 #C0C5CE
+# set $base05 #d1d4e0
+# set $base06 #C9CCDB
+# set $base07 #ffffff
+# set $base08 #ee829f
+# set $base09 #f99170
+# set $base0A #ffefcc
+# set $base0B #a5ffe1
+# set $base0C #97e0ff
+# set $base0D #97bbf7
+# set $base0E #c0b7f9
+# set $base0F #fcc09e
+set $base00 #fdf6e3
+set $base01 #eee8d5
+set $base02 #93a1a1
+set $base03 #839496
+set $base04 #657b83
+set $base05 #586e75
+set $base06 #073642
+set $base07 #002b36
+set $base08 #dc322f
+set $base09 #cb4b16
+set $base0A #b58900
+set $base0B #859900
+set $base0C #2aa198
+set $base0D #268bd2
+set $base0E #6c71c4
+set $base0F #d33682
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:SF Pro Text Medium 10
+font pango:SF Pro Text Medium 6
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -195,37 +211,55 @@ mode "resize" {
 
 bindsym $mod+t mode "resize"
 
+# exec_always --no-startup-id ~/bin/polybar.sh
+
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 
 bar {
-	status_command i3status
+#	status_command i3status
+	status_command ~/.cargo/bin/i3status-rs ~/.config/i3status-rust/config.toml
+
+
 #  	status_command i3blocks -c ~/.config/i3/i3blocks.conf
 	tray_output primary
 
-	font pango: Font Awesome 5 Free 10, SF Pro Text Medium 10
+	font pango:SF Pro Text Medium 10, Font Awesome 5 Free 8
+	# font pango:Font Awesome 5 Free 8
 
 	position bottom
         strip_workspace_numbers yes
         #bindsym button4 nop
         #bindsym button5 nop
         colors {
-              separator $base03
-              background $base01
-              statusline $base05
+              separator $base01
+              background $base00
+              statusline $base04
 #                        border  background text
-              focused_workspace  $base01 $base01    $base07
-              active_workspace   $base01 $base02    $base03
-              inactive_workspace $base01 $base01    $base03
-              urgent_workspace   $base01 $base01    $base08
+              focused_workspace  $base05 $base0D    $base00
+              active_workspace   $base05 $base03    $base00
+              inactive_workspace $base03 $base01    $base05
+              urgent_workspace   $base08 $base08    $base00
+              binding_mode       $base00 $base0A    $base00
     }
+#         colors {
+#               separator $base03
+#               background $base01
+#               statusline $base05
+# #                        border  background text
+#               focused_workspace  $base01 $base01    $base07
+#               active_workspace   $base01 $base02    $base03
+#               inactive_workspace $base01 $base01    $base03
+#               urgent_workspace   $base01 $base01    $base08
+#     }
 }
 
 for_window [class="copyq" instance="copyq"] floating enable resize set 1000 700
 
 focus_follows_mouse no
 
-#default_border none
+# default_border none
+# for_window [class=".*"] border pixel 1
 
 # workspace 1 output HDMI-0
 # workspace 3 output HDMI-0
@@ -280,13 +314,16 @@ exec --no-startup-id /usr/bin/systemctl --user restart clipper.service
 
 bindsym mod4+slash exec --no-startup-id rofi -theme gruvbox-light-soft -show drun -lines 10 -eh 2 -width 30 -padding 500 -opacity "80" -bw 0 -bc "$base01" -bg "$base02" -fg "$base07" -hlbg "$base05" -columns 1 -font "SF Pro Text Regular 18" -hlfg "#9575cd"
 bindsym mod4+Shift+slash exec --no-startup-id rofi -theme gruvbox-light-soft -show calc -no-show-match -no-sort -calc-command "echo '{result}' | nc -N localhost 60158" -lines 10 -eh 2 -width 30 -padding 500 -opacity "80" -bw 0 -bc "$base01" -bg "$base02" -fg "$base07" -hlbg "$base05" -columns 1 -font "SF Pro Text Regular 18" -hlfg "#9575cd"
+bindsym mod4+Tab exec --no-startup-id rofi -theme gruvbox-light-soft -show window -lines 10 -eh 2 -width 30 -padding 500 -opacity "80" -bw 0 -bc "$base01" -bg "$base02" -fg "$base07" -hlbg "$base05" -columns 1 -font "SF Pro Text Regular 18" -hlfg "#9575cd"
 
 
 # Windows
-client.focused          $base01 $base01    $base07 $base0F
-client.focused_inactive $base02 $base02    $base03 $base0F
-client.unfocused        $base02 $base02    $base03 $base0F
-client.urgent           $base02 $base08    $base00 $base0F
+client.focused          $base05 $base0D    $base00 $base0D $base0C
+client.focused_inactive $base01 $base01    $base05 $base03 $base01
+client.unfocused        $base01 $base00    $base05 $base01 $base01
+client.urgent           $base08 $base08    $base00 $base08 $base08
+client.placeholder      $base00 $base00    $base05 $base00 $base00
+client.background       $base07
 
 # mouse setup
 exec_always --no-startup-id ~/bin/xinput.sh
@@ -298,27 +335,41 @@ exec_always --no-startup-id xset r rate 300 30
 exec_always --no-startup-id ~/bin/xsetwacom.sh
 
 # wallpaper
-exec --no-startup-id feh --bg-scale ~/Pictures/wallpapers/10-13.jpg ~/Pictures/wallpapers/10-13.jpg ~/Pictures/wallpapers/10-13.jpg
+exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/10-13.jpg ~/Pictures/wallpapers/10-13.jpg ~/Pictures/wallpapers/10-13.jpg
 
 # numlock
 exec --no-startup-id numlockx on
 
 # applications
-bindsym $mod+a [class="UXTerm" instance="xterm"] focus
-bindsym $mod+e [class="Google-chrome" instance="google-chrome"] focus
-bindsym $mod+apostrophe [class="jetbrains-clion" instance="jetbrains-clion"] focus
-bindsym $mod+j [class="jetbrains-pycharm" instance="jetbrains-pycharm"] focus
-bindsym $mod+i [class="jetbrains-idea" instance="jetbrains-idea"] focus
-bindsym $mod+k [class="jetbrains-goland" instance="jetbrains-goland"] focus
-bindsym $mod+o [class="Doublecmd" instance="doublecmd"] focus
-bindsym $mod+p [class="Joplin" instance="joplin"] focus
-bindsym $mod+comma [class="REAPER" instance="REAPER"] focus
-#bindsym $mod+y [class="Sublime_text" instance="sublime_text"] focus
-bindsym $mod+u [class="Emacs" instance="emacs"] focus
-bindsym $mod+period [class="Slack" instance="slack"] focus
-bindsym $mod+y [class="Google-chrome" instance="crx_ekglgdmmidoibacfccdnphcemdganldg"] focus
+# bindsym $mod+a [class="UXTerm" instance="xterm"] focus
+# bindsym $mod+e [class="Google-chrome" instance="google-chrome"] focus
+# bindsym $mod+apostrophe [class="jetbrains-clion" instance="jetbrains-clion"] focus
+# bindsym $mod+j [class="jetbrains-pycharm" instance="jetbrains-pycharm"] focus
+# bindsym $mod+i [class="jetbrains-idea" instance="jetbrains-idea"] focus
+# bindsym $mod+k [class="jetbrains-goland" instance="jetbrains-goland"] focus
+# bindsym $mod+o [class="Doublecmd" instance="doublecmd"] focus
+# bindsym $mod+p [class="Joplin" instance="joplin"] focus
+# bindsym $mod+comma [class="REAPER" instance="REAPER"] focus
+# #bindsym $mod+y [class="Sublime_text" instance="sublime_text"] focus
+# bindsym $mod+u [class="Emacs" instance="emacs"] focus
+# bindsym $mod+period [class="Slack" instance="slack"] focus
+# bindsym $mod+y [class="Google-chrome" instance="crx_ekglgdmmidoibacfccdnphcemdganldg"] focus
 
-bindsym $mod+Shift+a exec uxterm
+bindsym $mod+a exec --no-startup-id wmctrl.py xterm.UXTerm
+bindsym $mod+e exec --no-startup-id wmctrl.py google-chrome.Google-chrome
+bindsym $mod+apostrophe exec --no-startup-id wmctrl.py jetbrains-clion.jetbrains-clion
+bindsym $mod+j exec --no-startup-id wmctrl.py jetbrains-pycharm.jetbrains-pycharm
+bindsym $mod+i exec --no-startup-id wmctrl.py jetbrains-idea.jetbrains-idea
+bindsym $mod+k exec --no-startup-id wmctrl.py jetbrains-goland.jetbrains-goland
+bindsym $mod+o exec --no-startup-id wmctrl.py doublecmd.Doublecmd
+bindsym $mod+p exec --no-startup-id wmctrl.py joplin.Joplin
+bindsym $mod+comma exec --no-startup-id wmctrl.py REAPER.REAPER
+#bindsym $mod+y [class="Sublime_text" instance="sublime_text"] focus
+bindsym $mod+u exec --no-startup-id wmctrl.py emacs.Emacs
+bindsym $mod+period exec --no-startup-id wmctrl.py slack.Slack
+bindsym $mod+y exec --no-startup-id wmctrl.py crx_ekglgdmmidoibacfccdnphcemdganldg.Google-chrome
+
+bindsym $mod+Shift+a exec --no-startup-id uxterm
 bindsym $mod+Shift+e exec google-chrome --force-device-scale-factor=1.5
 bindsym $mod+Shift+x exec google-chrome --force-device-scale-factor=1.0
 bindsym $mod+Shift+apostrophe exec clion
