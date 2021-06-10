@@ -7,3 +7,4 @@ everything is owned by their respective owners
 font awesome 5 installation
 i3status-rust installation (sudo apt install libdbus-glib-1-dev)
 wmctrl.py switcher
+playerctl installation

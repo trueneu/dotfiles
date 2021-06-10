@@ -67,6 +67,18 @@ format = "{ssid} {signal_strength} {bitrate;M}"
 interval = 10
 
 [[block]]
+block = "net"
+device = "wlp10s0"
+format = "{ssid} {signal_strength} {bitrate;M}"
+interval = 10
+
+[[block]]
+block = "net"
+device = "enp0s31f6"
+format = "{bitrate}"
+interval = 10
+
+[[block]]
 block = "cpu"
 format = "{utilization} {frequency}"
 interval = 1
