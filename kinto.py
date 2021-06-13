@@ -493,3 +493,8 @@ define_keymap(re.compile(termStr, re.IGNORECASE),{
 
 
 }, "terminals")
+
+define_keymap(lambda wm_class: wm_class.casefold() in editors,{
+    K("LC-LEFT_BRACE") : K("RSuper-LEFT_BRACE"),
+    K("LSuper-LEFT_BRACE") : [K("RC-i"), K("LEFT_BRACE")]
+})

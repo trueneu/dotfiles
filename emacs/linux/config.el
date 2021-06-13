@@ -56,6 +56,8 @@
 (unbind-key "s--")
 (unbind-key "s-0")
 (unbind-key "s-|")
+(unbind-key "<f10>")
+
 
 (setq
  ;; No need to see GNU agitprop.
@@ -79,6 +81,9 @@
  )
 
 (setq-default indent-tabs-mode nil)
+;; (setq-default tab-width 4)
+(setq-default c-basic-offset 4)
+;; (setq indent-line-function 'insert-tab)
 
 (defalias 'yes-or-no-p 'y-or-n-p) ; Accept 'y' in lieu of 'yes'.
 
@@ -264,11 +269,8 @@
 (set-fill-column 135)
 
 (use-package expand-region
-  :bind (("<M-up>" . er/expand-region)))
-
-;; todo: find what's binded to C-/ and rebind it somewhere else,
-;; bind this to C-/
-(bind-key "C-c /" #'comment-dwim)
+  :bind (("<M-up>" . er/expand-region)
+         ("<M-down>" . er/contract-region)))
 
 (use-package avy
   :bind ("C-c l" . avy-goto-line))
@@ -372,7 +374,7 @@
       (ace-window nil)))
 
 
-  :bind (("s-," . my-ace-window))
+  :bind (("C-O" . my-ace-window))
   :custom
   (aw-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n ?s) "Designate windows by home row keys, not numbers.")
   (aw-background nil))
@@ -409,10 +411,11 @@
 (use-package projectile
   :init
 ;  (setq projectile-keymap-prefix (kbd "C-c p"))
-  (setq projectile-keymap-prefix (kbd "C-c p"))
+  (setq projectile-keymap-prefix (kbd "s-p"))
   :diminish
-  :bind (("C-c k" . #'projectile-kill-buffers)
-         ("C-c M" . #'projectile-compile-project))
+  :bind (("s-p k" . #'projectile-kill-buffers)
+         ("s-p M" . #'projectile-compile-project)
+         ("s-p s-F" . #'projectile-ripgrep))
   :custom
   (projectile-completion-system 'ivy)
   (projectile-enable-caching t)
@@ -490,7 +493,10 @@
   :config (global-flycheck-inline-mode))
 
 (use-package deadgrep
-  :bind (("C-c h" . #'deadgrep)))
+  :bind (("C-c h" . #'deadgrep)
+         ("s-F" . #'deadgrep)))
+
+(use-package ripgrep)
 
 ;; todo: strange keybind
 (use-package visual-regexp
@@ -500,7 +506,12 @@
 
 (use-package visual-regexp-steroids)
 
+;; irony
+
 ;; todo: bind doesn't work
+
+(use-package company-irony)
+
 (use-package company
   :diminish
   :bind (("C-." . #'company-capf))
@@ -512,7 +523,7 @@
   (company-tooltip-idle-delay 0.4 "Faster!")
   (company-async-timeout 20 "Some requests can take a long time. That's fine.")
   :config
-
+  (add-to-list 'company-backends 'company-irony)
   ;; Use the numbers 0-9 to select company completion candidates
   (let ((map company-active-map))
     (mapc (lambda (x) (define-key map (format "%d" x)
@@ -535,12 +546,15 @@
 (bind-key "<s-f5>" #'delete-frame)
 
 (bind-key "s-w" #'delete-window)
+(bind-key "s-W" #'delete-other-windows)
+(bind-key "s-k" #'kill-this-buffer)
+(bind-key "s-o" #'other-window)
 (bind-key "s-t" #'split-window-right)
 (bind-key "s-T" #'split-window-below)
 (bind-key "s-s" #'save-buffer)
 (bind-key "s-n" #'make-frame-command)
 (bind-key "s-q" #'save-buffers-kill-terminal)
-(bind-key "s-<" #'other-window)
+;; (bind-key "s-<" #'other-window)
 (bind-key "s-v" #'yank)
 (bind-key "s-c" #'kill-ring-save)
 (bind-key "s-x" #'kill-region)
@@ -558,6 +572,12 @@
 (bind-key "M-SPC" #'company-complete)
 (bind-key "s-b" #'xref-find-definitions)
 (bind-key "s-B" #'xref-pop-marker-stack)
+(bind-key "<s-up>" #'backward-paragraph)
+(bind-key "<s-down>" #'forward-paragraph)
+;; (bind-key "C-c /" #'comment-or-uncomment-region)
+(bind-key "C-c /" #'comment-dwim)
+(bind-key "<f10>" #'ff-find-other-file)
+(bind-key "s-[" #'pop-global-mark)
 
 (defun mark-from-point-to-end-of-line ()
   "Marks everything from point to end of line"
@@ -628,6 +648,31 @@
   :init
   (fmakunbound 'gdb)
   (fmakunbound 'gdb-enable-debug))
+
+;; irony
+
+(use-package irony
+  :config
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'objc-mode-hook 'irony-mode)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+
+;; (require 'irony)
+;; (add-hook 'c++-mode-hook 'irony-mode)
+;; (add-hook 'c-mode-hook 'irony-mode)
+;; (add-hook 'objc-mode-hook 'irony-mode)
+;; (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+;; (eval-after-load 'company
+;;   '(add-to-list 'company-backends 'company-irony))
+
+(use-package command-log-mode)
+
+;; (defun c-indent-mode-hook ()
+;;   (c-set-offset 4))
+;; (add-hook 'c-mode-common-hook 'c-indent-mode-hook)
 
 (provide 'config)
 ;;; config.el ends here
