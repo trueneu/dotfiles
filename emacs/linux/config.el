@@ -376,7 +376,7 @@
 
   :bind (("C-O" . my-ace-window))
   :custom
-  (aw-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n ?s) "Designate windows by home row keys, not numbers.")
+  (aw-keys '(?h ?t ?n ?s ?a ?o ?e ?u ?i ?d) "Designate windows by home row keys, not numbers.")
   (aw-background nil))
 
 (setq enable-recursive-minibuffers t)
