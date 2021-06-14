@@ -736,7 +736,10 @@
   (bind-key "<C-s-up>" #'org-do-promote org-mode-map)
   (bind-key "<C-s-down>" #'org-do-demote org-mode-map)
   (bind-key "<C-S-s-up>" #'org-promote-subtree org-mode-map)
-  (bind-key "<C-S-s-down>" #'org-demote-subtree org-mode-map))
+  (bind-key "<C-S-s-down>" #'org-demote-subtree org-mode-map)
+  (bind-key "s-M" #'org-agenda-list))
+
+(setq org-agenda-files (list "~/Documents/notes/bullet.org"))
 
 (provide 'config)
 ;;; config.el ends here
