@@ -741,5 +741,48 @@
 
 (setq org-agenda-files (list "~/Documents/notes/bullet.org"))
 
+;; appt
+(appt-activate t)
+
+(setq appt-message-warning-time 1) ; Show notification 5 minutes before event
+(setq appt-display-interval appt-message-warning-time) ; Disable multiple reminders
+(setq appt-display-mode-line nil)
+
+                                        ; Use appointment data from org-mode
+(defun my-org-agenda-to-appt ()
+  (interactive)
+  (setq appt-time-msg-list nil)
+  (org-agenda-to-appt))
+
+                                        ; Update alarms when...
+                                        ; (1) ... Starting Emacs
+(my-org-agenda-to-appt)
+
+                                        ; (2) ... Everyday at 12:05am (useful in case you keep Emacs always on)
+(run-at-time "12:05am" (* 24 3600) 'my-org-agenda-to-appt)
+
+                                        ; (3) ... When TODO.txt is saved
+
+(add-hook 'after-save-hook
+          '(lambda ()
+             (if (string= (buffer-file-name) (concat (getenv "HOME") "/Documents/notes/bullet.org"))
+                 (my-org-agenda-to-appt))))
+
+                                        ; (4) ... Quitting org-agenda.
+(advice-add 'org-agenda-quit :after #'my-org-agenda-to-appt)
+
+                                        ; Display appointments as a window manager notification
+(setq appt-disp-window-function 'my-appt-display)
+(setq appt-delete-window-function (lambda () t))
+
+(setq my-appt-notification-app (concat (getenv "HOME") "/bin/appt-notification.sh"))
+
+(defun my-appt-display (min-to-app new-time msg)
+  (if (atom min-to-app)
+      (start-process "my-appt-notification-app" nil my-appt-notification-app min-to-app msg)
+    (dolist (i (number-sequence 0 (1- (length min-to-app))))
+      (start-process "my-appt-notification-app" nil my-appt-notification-app (nth i min-to-app) (nth i msg)))))
+
+
 (provide 'config)
 ;;; config.el ends here
