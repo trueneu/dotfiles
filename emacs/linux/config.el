@@ -189,18 +189,18 @@
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions(lambda (frame)
-                       (select-frame frame)
-                       (if (window-system frame)
-                           (unless my:theme-window-loaded
-                             (if my:theme-terminal-loaded
-                                 (enable-theme my:theme)
-                               (load-theme my:theme t))
-                             (setq my:theme-window-loaded t))
-                         (unless my:theme-terminal-loaded
-                           (if my:theme-window-loaded
-                               (enable-theme my:theme)
-                             (load-theme my:theme t))
-                           (setq my:theme-terminal-loaded t)))))
+                                           (select-frame frame)
+                                           (if (window-system frame)
+                                               (unless my:theme-window-loaded
+                                                 (if my:theme-terminal-loaded
+                                                     (enable-theme my:theme)
+                                                   (load-theme my:theme t))
+                                                 (setq my:theme-window-loaded t))
+                                             (unless my:theme-terminal-loaded
+                                               (if my:theme-window-loaded
+                                                   (enable-theme my:theme)
+                                                 (load-theme my:theme t))
+                                               (setq my:theme-terminal-loaded t)))))
 
   (progn
     (load-theme my:theme t)
@@ -410,7 +410,7 @@
 
 (use-package projectile
   :init
-;  (setq projectile-keymap-prefix (kbd "C-c p"))
+                                        ;  (setq projectile-keymap-prefix (kbd "C-c p"))
   (setq projectile-keymap-prefix (kbd "s-p"))
   :diminish
   :bind (("s-p k" . #'projectile-kill-buffers)
@@ -578,6 +578,9 @@
 (bind-key "C-c /" #'comment-dwim)
 (bind-key "<f10>" #'ff-find-other-file)
 (bind-key "s-[" #'pop-global-mark)
+(bind-key "<s-left>" #'move-beginning-of-line)
+(bind-key "<s-right>" #'move-end-of-line)
+
 
 (defun mark-from-point-to-end-of-line ()
   "Marks everything from point to end of line"
@@ -673,6 +676,67 @@
 ;; (defun c-indent-mode-hook ()
 ;;   (c-set-offset 4))
 ;; (add-hook 'c-mode-common-hook 'c-indent-mode-hook)
+
+;; org mode configuration
+
+(use-package org-bullets
+  :ensure t
+  :hook (org-mode . org-bullets-mode))
+
+(use-package org-fancy-priorities
+  :diminish
+  :ensure t
+  :hook (org-mode . org-fancy-priorities-mode)
+  :config
+  (setq org-fancy-priorities-list '("🅰" "🅱" "🅲" "🅳" "🅴")))
+
+(defun isamert/toggle-side-bullet-org-buffer ()
+  "Toggle `bullet.org` in a side buffer for quick note taking.  The buffer is opened in side window so it can't be accidentaly removed."
+  (interactive)
+  (isamert/toggle-side-buffer-with-file "~/Documents/notes/bullet.org"))
+
+(defun isamert/buffer-visible-p (buffer)
+  "Check if given BUFFER is visible or not.  BUFFER is a string representing the buffer name."
+  (or (eq buffer (window-buffer (selected-window))) (get-buffer-window buffer)))
+
+(defun isamert/display-buffer-in-side-window (buffer)
+  "Just like `display-buffer-in-side-window' but only takes a BUFFER and rest of the parameters are for my taste."
+  (select-window
+   (display-buffer-in-side-window
+    buffer
+    (list (cons 'side 'right)
+          (cons 'slot 0)
+          (cons 'window-width 84)
+          (cons 'window-parameters (list (cons 'no-delete-other-windows t)
+                                         (cons 'no-other-window nil)))))))
+
+(defun isamert/remove-window-with-buffer (the-buffer-name)
+  "Remove window containing given THE-BUFFER-NAME."
+  (mapc (lambda (window)
+          (when (string-equal (buffer-name (window-buffer window)) the-buffer-name)
+            (delete-window window)))
+        (window-list (selected-frame))))
+
+(defun isamert/toggle-side-buffer-with-file (file-path)
+  "Toggle FILE-PATH in a side buffer. The buffer is opened in side window so it can't be accidentaly removed."
+  (interactive)
+  (let ((fname (file-name-nondirectory file-path)))
+    (if (isamert/buffer-visible-p fname)
+        (isamert/remove-window-with-buffer fname)
+      (isamert/display-buffer-in-side-window
+       (save-window-excursion
+         (find-file file-path)
+         (current-buffer))))))
+
+(bind-key "s-m" #'isamert/toggle-side-bullet-org-buffer)
+
+(setq calendar-week-start-day 1)
+
+(with-eval-after-load 'org
+  (bind-key "<C-s-up>" #'org-do-promote org-mode-map)
+  (bind-key "<C-s-down>" #'org-do-demote org-mode-map)
+  (bind-key "<C-S-s-up>" #'org-promote-subtree org-mode-map)
+  (bind-key "<C-S-s-down>" #'org-demote-subtree org-mode-map))
 
 (provide 'config)
 ;;; config.el ends here
