@@ -736,12 +736,16 @@
   (bind-key "<C-s-up>" #'org-do-promote org-mode-map)
   (bind-key "<C-s-down>" #'org-do-demote org-mode-map)
   (bind-key "<C-S-s-up>" #'org-promote-subtree org-mode-map)
-  (bind-key "<C-S-s-down>" #'org-demote-subtree org-mode-map)
-  (bind-key "s-M" #'org-agenda-list))
+  (bind-key "<C-S-s-down>" #'org-demote-subtree org-mode-map))
+
+(bind-key "s-M" #'org-agenda-list)
 
 (setq org-agenda-files (list "~/Documents/notes/bullet.org"))
 
+;; (org-agenda)
+
 ;; appt
+(require 'appt)
 (appt-activate t)
 
 (setq appt-message-warning-time 1) ; Show notification 5 minutes before event
@@ -756,10 +760,11 @@
 
                                         ; Update alarms when...
                                         ; (1) ... Starting Emacs
-(my-org-agenda-to-appt)
+                                        ; doesn't work if agenda wasn't opened before
+;; (my-org-agenda-to-appt)
 
                                         ; (2) ... Everyday at 12:05am (useful in case you keep Emacs always on)
-(run-at-time "12:05am" (* 24 3600) 'my-org-agenda-to-appt)
+;; (run-at-time "12:05am" (* 24 3600) 'my-org-agenda-to-appt)
 
                                         ; (3) ... When TODO.txt is saved
 
@@ -770,6 +775,9 @@
 
                                         ; (4) ... Quitting org-agenda.
 (advice-add 'org-agenda-quit :after #'my-org-agenda-to-appt)
+
+                                        ; (5) ... Each time agenda is opened
+(add-hook 'org-agenda-finalize-hook 'my-org-agenda-to-appt)
 
                                         ; Display appointments as a window manager notification
 (setq appt-disp-window-function 'my-appt-display)
