@@ -228,11 +228,13 @@ bar {
 
 #  	status_command i3blocks -c ~/.config/i3/i3blocks.conf
 	tray_output primary
+#        output primary
+#        output HDMI-0
 
 	font pango:Font Awesome 5 Free, SF Pro Text Medium 8
 	# font pango:Font Awesome 5 Free 8
 
-	position bottom
+	position top
         strip_workspace_numbers yes
         #bindsym button4 nop
         #bindsym button5 nop
@@ -259,7 +261,9 @@ bar {
 #     }
 }
 
-for_window [class="copyq" instance="copyq"] floating enable resize set 1000 700
+# for_window [class="copyq" instance="copyq"]
+for_window [class="copyq" instance="copyq"] floating enable, resize set 1500 700 px, move container to output primary
+# for_window [class="copyq" instance="copyq"]
 
 focus_follows_mouse no
 
@@ -316,6 +320,8 @@ exec --no-startup-id xrdb -merge ~/.Xresources
 exec --no-startup-id sudo /usr/bin/systemctl restart xkeysnail.service
 
 exec --no-startup-id /usr/bin/systemctl --user restart clipper.service
+
+exec_always copyq
 
 bindsym mod4+slash exec --no-startup-id rofi -theme gruvbox-light-soft -show drun -lines 10 -eh 2 -width 30 -padding 500 -opacity "80" -bw 0 -bc "$base01" -bg "$base02" -fg "$base07" -hlbg "$base05" -columns 1 -font "SF Pro Text Regular 18" -hlfg "#9575cd"
 bindsym mod4+Shift+slash exec --no-startup-id rofi -theme gruvbox-light-soft -show calc -no-show-match -no-sort -calc-command "echo '{result}' | nc -N localhost 60158" -lines 10 -eh 2 -width 30 -padding 500 -opacity "80" -bw 0 -bc "$base01" -bg "$base02" -fg "$base07" -hlbg "$base05" -columns 1 -font "SF Pro Text Regular 18" -hlfg "#9575cd"
@@ -386,9 +392,12 @@ bindsym $mod+Shift+o exec doublecmd
 bindsym $mod+Shift+p exec joplin
 #bindsym $mod+Shift+comma exec reaper
 #bindsym $mod+Shift+y exec subl
-bindsym $mod+Shift+u exec emacsclient -c
+#bindsym $mod+Shift+u exec emacsclient -c
+bindsym $mod+Shift+u exec emacs
 bindsym $mod+Shift+period exec slack --force-device-scale-factor=1.25
 bindsym $mod+Shift+comma exec youtube-music
+
+bindsym Mod1+Control+v exec --no-startup-id ~/bin/copyq.sh
 
 # kb layout
 bindsym mod4+space exec --no-startup-id xkb

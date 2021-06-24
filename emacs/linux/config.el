@@ -57,7 +57,15 @@
 (unbind-key "s-0")
 (unbind-key "s-|")
 (unbind-key "<f10>")
+(unbind-key "<f1>")
 
+(unbind-key "C-x C-f") ;; find-file-read-only
+(unbind-key "C-x C-d") ;; list-directory
+(unbind-key "C-z") ;; suspend-frame
+(unbind-key "M-o") ;; facemenu-mode
+(unbind-key "<mouse-2>") ;; pasting with mouse-wheel click
+(unbind-key "<C-wheel-down>") ;; text scale adjust
+(unbind-key "<C-wheel-up>") ;; ditto
 
 (setq
  ;; No need to see GNU agitprop.
@@ -114,17 +122,6 @@
 ;;     (set-fontset-font "fontset-default" 'unicode "Apple Color Emoji" nil 'prepend)
 ;;   (warn "This Emacs version is too old to properly support emoji."))
 
-(unbind-key "C-x C-f") ;; find-file-read-only
-(unbind-key "C-x C-d") ;; list-directory
-(unbind-key "C-z") ;; suspend-frame
-(unbind-key "M-o") ;; facemenu-mode
-(unbind-key "<mouse-2>") ;; pasting with mouse-wheel click
-(unbind-key "<C-wheel-down>") ;; text scale adjust
-(unbind-key "<C-wheel-up>") ;; ditto
-
-(setq custom-file "~/.config/emacs/emacs-custom.el")
-(load custom-file)
-
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 (setq require-final-newline t)
 
@@ -154,11 +151,6 @@
 ;; (ignore-errors (set-frame-font "Menlo-14"))
 ;; don't forget to try the emacs GUI mode here and figure out how JetBrains Mono is called here
 
-(use-package all-the-icons)
-(use-package all-the-icons-dired
-  :after all-the-icons
-  :hook (dired-mode . all-the-icons-dired-mode))
-
 ;; maximize the window
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
@@ -167,6 +159,9 @@
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (tooltip-mode -1))
+
+(use-package all-the-icons
+  :defer 0.5)
 
 ;; Doom themes, useful for gui
 
@@ -259,8 +254,11 @@
   (centaur-tabs-buffer-groups-function #'centaur-tabs-projectile-buffer-groups)
 
   :bind
-  (("s-{" . #'centaur-tabs-backward)
-   ("s-}" . #'centaur-tabs-forward)))
+  (("<C-iso-lefttab>" . #'centaur-tabs-backward)
+   ("<C-tab>" . #'centaur-tabs-forward)))
+
+;; (setq centaur-tabs-set-bar 'over)
+;; (setq x-underline-at-descent-line t)
 
 (use-package multiple-cursors
   :bind (("C-c m m" . #'mc/edit-lines )
@@ -314,8 +312,6 @@
     (save-mark-and-excursion (duplicate-thing 1)))
   :bind (("C-c u" . my-duplicate-thing)
          ("C-c C-u" . my-duplicate-thing)))
-
-;; todo: add :ensure t to each use-package?
 
 (setq read-process-output-max (* 1024 1024)) ; 1mb
 
@@ -374,7 +370,7 @@
       (ace-window nil)))
 
 
-  :bind (("C-O" . my-ace-window))
+  :bind (("s-O" . my-ace-window))
   :custom
   (aw-keys '(?h ?t ?n ?s ?a ?o ?e ?u ?i ?d) "Designate windows by home row keys, not numbers.")
   (aw-background nil))
@@ -421,7 +417,8 @@
   (projectile-enable-caching t)
   :config
   (projectile-mode)
-  (setq projectile-project-search-path '("~/git_tree")))
+  (setq projectile-project-search-path '("~/git_tree"))
+  (setq projectile-sort-order 'recently-active))
 
 (use-package ivy
   :diminish
@@ -494,7 +491,7 @@
 
 (use-package deadgrep
   :bind (("C-c h" . #'deadgrep)
-         ("s-F" . #'deadgrep)))
+         ("s-F" . #'deadgrep)))         ; todo: s-F to find
 
 (use-package ripgrep)
 
@@ -530,8 +527,77 @@
 			`(lambda () (interactive) (company-complete-number ,x))))
 	  (number-sequence 0 9))))
 
-;; todo: lsp section omitted
+(use-package lsp-mode
+  :commands (lsp lsp-execute-code-action)
+  :hook ((go-mode . lsp-deferred)
+         (lsp-mode . lsp-enable-which-key-integration)
+         (lsp-mode . lsp-modeline-diagnostics-mode)
+         (c++-mode . lsp-deferred))
+  :bind (("C-c C-c" . #'lsp-execute-code-action)
+         ("M-s-b" . #'lsp-find-references)
+         ("M-b" . #'lsp-find-implementation)
+         ("<f1>" . #'lsp-ui-doc-show))
+  :custom
+  (lsp-diagnostics-modeline-scope :project)
+  (lsp-file-watch-threshold 5000)
+  (lsp-response-timeout 2)
+  (lsp-enable-file-watchers nil))
+
+;; todo: lsp doc show is very interesting
+;; todo: review customized stuff
+;; todo: enable dap-mode
+
+(use-package lsp-ui
+  :custom
+  (lsp-ui-doc-mode t)
+  (lsp-ui-doc-delay 50)
+  (lsp-ui-doc-max-height 1000)
+  (lsp-ui-doc-position 'at-point)
+  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-peek-always-show nil)
+  :after lsp-mode)
+
+(use-package lsp-ivy
+  :after (ivy lsp-mode))
+
+(use-package company-lsp
+  :disabled
+  :custom (company-lsp-enable-snippet t)
+  :after (company lsp-mode))
+
+(use-package lsp-treemacs
+  :config (lsp-treemacs-sync-mode 1)
+  :after (lsp treemacs))
+
+(use-package treemacs
+  :bind
+  (("s-&" . treemacs))
+  :custom
+  (treemacs-use-follow-mode nil)
+  (treemacs-use-all-the-iconfs-theme t))
+
+;; todo: can I just type and invoke Swiper?..
+
+(use-package treemacs-projectile
+  :after (treemacs projectile))
+
+(use-package treemacs-icons-dired
+  :after (treemacs dired)
+  :config (treemacs-icons-dired-mode))
+
+(use-package treemacs-magit
+  :after (treemacs magit))
+
+;; workaround
+(use-package dash)
+
 ;; todo: no ssh-agent access
+
+;; todo: yasnippet
+;; todo: golang support
+;; todo: C-; is a very interesting function
+;; todo: company-complete binding (M-SPC)
+
 
 ;; keybindings
 (bind-key "C-x k" #'kill-this-buffer)
@@ -580,7 +646,8 @@
 (bind-key "s-[" #'pop-global-mark)
 (bind-key "<s-left>" #'move-beginning-of-line)
 (bind-key "<s-right>" #'move-end-of-line)
-
+(bind-key "<C-left>" #'previous-buffer)
+(bind-key "<C-right>" #'next-buffer)
 
 (defun mark-from-point-to-end-of-line ()
   "Marks everything from point to end of line"
@@ -661,12 +728,6 @@
   (add-hook 'objc-mode-hook 'irony-mode)
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
-
-;; (require 'irony)
-;; (add-hook 'c++-mode-hook 'irony-mode)
-;; (add-hook 'c-mode-hook 'irony-mode)
-;; (add-hook 'objc-mode-hook 'irony-mode)
-;; (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
 ;; (eval-after-load 'company
 ;;   '(add-to-list 'company-backends 'company-irony))
@@ -791,6 +852,69 @@
     (dolist (i (number-sequence 0 (1- (length min-to-app))))
       (start-process "my-appt-notification-app" nil my-appt-notification-app (nth i min-to-app) (nth i msg)))))
 
+
+;; dashboard: todo
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook)
+  :custom
+  (dashboard-projects-backend 'projectile)
+  (dashboard-items '((recents  . 10)
+                     (projects . 10)
+                     (agenda . 10)
+                     (bookmarks . 5)
+                     (registers . 5))))
+
+;; purpose
+;; (use-package window-purpose)
+;; (purpose-mode)
+;; (require 'window-purpose-x)
+;; (add-to-list 'purpose-user-mode-purposes '(c++-mode . cpp))
+;; (purpose-compile-user-configuration)
+
+;; the reason purpose works badly is - probably - that it overrides C-x b, which I don't use.
+
+;; perspective
+
+(use-package perspective
+  :bind
+  (("M-s-e" . persp-ivy-switch-buffer)   ; or use a nicer switcher, see below
+   ("<C-M-tab>" . persp-next)
+   ("<C-M-iso-lefttab>" . persp-prev))
+  :config
+  (persp-state-load persp-state-default-file)
+  :hook
+  (kill-emacs-hook . persp-state-save)
+  :custom
+  (persp-state-default-file (concat (getenv "HOME") "/.config/emacs/perspectives")))
+
+(persp-mode)
+
+;; from perspective's author:
+
+(setq display-buffer-alist
+      '((".*"
+         (display-buffer-reuse-window display-buffer-same-window)
+         (reusable-frames . t))))
+
+(setq even-window-sizes nil)  ; display-buffer hint: avoid resizing
+
+;; cursor color
+
+(set-cursor-color "#DC322F")
+
+(use-package all-the-icons-dired
+  :after all-the-icons
+  :hook (dired-mode . all-the-icons-dired-mode))
+
+;; git-gutter
+(use-package git-gutter
+  :config
+  (global-git-gutter-mode +1))
+
+;; custom-file
+(setq custom-file "~/.config/emacs/emacs-custom.el")
+(load custom-file)
 
 (provide 'config)
 ;;; config.el ends here
