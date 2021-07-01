@@ -31,6 +31,7 @@ codeStr = "|".join(str(x) for x in mscodes)
 mscodes_terminals = []
 mscodes_terminals.extend(mscodes)
 mscodes_terminals.extend(terminals)
+mscodes_terminals.extend(editors)     # don't override M-right, M-left for emacs
 
 # [Global modemap] Change modifier keys as in xmodmap
 define_conditional_modmap(lambda wm_class: wm_class.casefold() not in termEditors,{

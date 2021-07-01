@@ -398,6 +398,7 @@ bindsym $mod+Shift+period exec slack --force-device-scale-factor=1.25
 bindsym $mod+Shift+comma exec youtube-music
 
 bindsym Mod1+Control+v exec --no-startup-id ~/bin/copyq.sh
+bindsym Control+Shift+bracketleft exec --no-startup-id flameshot gui
 
 # kb layout
 bindsym mod4+space exec --no-startup-id xkb

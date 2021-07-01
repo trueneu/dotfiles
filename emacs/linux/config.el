@@ -1,5 +1,6 @@
 (setq lexical-binding t)
-(setq gc-cons-threshold 100000000)
+(setq gc-cons-threshold (* 1024 1024 1024))
+(setq native-comp-async-report-warnings-errors nil)
 
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
@@ -58,6 +59,8 @@
 (unbind-key "s-|")
 (unbind-key "<f10>")
 (unbind-key "<f1>")
+(unbind-key "<C-left>")
+(unbind-key "<C-right>")
 
 (unbind-key "C-x C-f") ;; find-file-read-only
 (unbind-key "C-x C-d") ;; list-directory
@@ -89,8 +92,8 @@
  )
 
 (setq-default indent-tabs-mode nil)
-;; (setq-default tab-width 4)
-(setq-default c-basic-offset 4)
+(setq-default tab-width 2)
+(setq-default c-basic-offset 2)
 ;; (setq indent-line-function 'insert-tab)
 
 (defalias 'yes-or-no-p 'y-or-n-p) ; Accept 'y' in lieu of 'yes'.
@@ -135,6 +138,7 @@
 
 (exec-path-from-shell-copy-env "SSH_AGENT_PID")
 (exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
+(exec-path-from-shell-copy-env "GOPATH")
 
 (defalias 'view-emacs-news 'ignore)
 (defalias 'describe-gnu-project 'ignore)
@@ -232,7 +236,9 @@
   :hook ((ruby-mode . tree-sitter-hl-mode)
          (js-mode . tree-sitter-hl-mode)
          (typescript-mode . tree-sitter-hl-mode)
-         (go-mode . tree-sitter-hl-mode)))
+         (go-mode . tree-sitter-hl-mode)
+         (c++-mode . tree-sitter-hl-mode)))
+
 (use-package tree-sitter-langs)
 
 ;; enable scrolling to the beginning/end of file
@@ -313,7 +319,7 @@
   :bind (("C-c u" . my-duplicate-thing)
          ("C-c C-u" . my-duplicate-thing)))
 
-(setq read-process-output-max (* 1024 1024)) ; 1mb
+(setq read-process-output-max (* 10 1024 1024)) ; 1mb
 
 (use-package which-key
   :custom
@@ -417,7 +423,7 @@
   (projectile-enable-caching t)
   :config
   (projectile-mode)
-  (setq projectile-project-search-path '("~/git_tree"))
+  (setq projectile-project-search-path '("~/git_tree" "~/gopath/src"))
   (setq projectile-sort-order 'recently-active))
 
 (use-package ivy
@@ -475,7 +481,8 @@
   (org-src-mode . disable-flycheck-for-elisp)
   :custom
   (flycheck-emacs-lisp-initialize-packages t)
-  (flycheck-display-errors-delay 0.1)
+  ;; (flycheck-display-errors-delay 0.1)
+  (flycheck-check-syntax-automatically '(save mode-enabled))
   :config
   (global-flycheck-mode)
   (flycheck-set-indication-mode 'left-margin)
@@ -522,10 +529,13 @@
   :config
   (add-to-list 'company-backends 'company-irony)
   ;; Use the numbers 0-9 to select company completion candidates
-  (let ((map company-active-map))
-    (mapc (lambda (x) (define-key map (format "%d" x)
-			`(lambda () (interactive) (company-complete-number ,x))))
-	  (number-sequence 0 9))))
+  ;; (let ((map company-active-map))
+  ;;   (mapc (lambda (x) (define-key map (format "%d" x)
+  ;;       		`(lambda () (interactive) (company-complete-number ,x))))
+  ;;         (number-sequence 0 9)))
+  )
+
+;; look how to slow down communication with LSP a little bit
 
 (use-package lsp-mode
   :commands (lsp lsp-execute-code-action)
@@ -536,7 +546,8 @@
   :bind (("C-c C-c" . #'lsp-execute-code-action)
          ("M-s-b" . #'lsp-find-references)
          ("M-b" . #'lsp-find-implementation)
-         ("<f1>" . #'lsp-ui-doc-show))
+         ("<f1>" . #'lsp-ui-doc-show)
+         ("M-s-l" . #'lsp-format-region))
   :custom
   (lsp-diagnostics-modeline-scope :project)
   (lsp-file-watch-threshold 5000)
@@ -546,6 +557,9 @@
 ;; todo: lsp doc show is very interesting
 ;; todo: review customized stuff
 ;; todo: enable dap-mode
+;; todo: how to change lsp clang formatting style
+;; todo: teach lsp to reformat the file on } in c++
+
 
 (use-package lsp-ui
   :custom
@@ -553,7 +567,8 @@
   (lsp-ui-doc-delay 50)
   (lsp-ui-doc-max-height 1000)
   (lsp-ui-doc-position 'at-point)
-  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-sideline-show-hover nil)
+  (lsp-ui-sideline-enable nil)
   (lsp-ui-peek-always-show nil)
   :after lsp-mode)
 
@@ -591,10 +606,44 @@
 ;; workaround
 (use-package dash)
 
-;; todo: no ssh-agent access
+;; dap-mode
 
-;; todo: yasnippet
-;; todo: golang support
+;; todo: redo the binds, probably install hydra and use the hydra dap-mode
+;; install llvm-gdb dap so the experience is the same across the debuggers
+
+(use-package dap-mode
+  :bind
+  (("C-c b b" . dap-breakpoint-toggle)
+   ("C-c b r" . dap-debug-restart)
+   ("C-c b l" . dap-debug-last)
+   ("C-c b d" . dap-debug))
+  :init
+  (require 'dap-go)
+  ;; NB: dap-go-setup appears to be broken, so you have to download the extension from GH, rename its file extension
+  ;; unzip it, and copy it into the config so that the following path lines up
+  (setq dap-go-debug-program `("node" ,(concat (getenv "HOME") "/.config/emacs/.extension/vscode/golang.go/extension/dist/debugAdapter.js")))
+  :config
+  (dap-mode)
+  (dap-auto-configure-mode)
+  (dap-ui-mode)
+  (dap-ui-controls-mode)
+  (dap-go-setup)         ;; this downloads the extension to some random /tmp/extXXXXX.zip file
+  )
+;; todo: bind various step-in, step-out, step-over, continue, run-to-cursor, etc
+
+
+;; yasnippet
+
+(use-package yasnippet
+  :defer 3 ;; takes a while to load, so do it async
+  :diminish yas-minor-mode
+  :config (yas-global-mode)
+  :custom (yas-prompt-functions '(yas-completing-prompt)))
+
+(use-package yasnippet-snippets
+  :defer 3 ;; takes a while to load, so do it async
+  :after (yasnippet))
+
 ;; todo: C-; is a very interesting function
 ;; todo: company-complete binding (M-SPC)
 
@@ -642,22 +691,37 @@
 (bind-key "<s-down>" #'forward-paragraph)
 ;; (bind-key "C-c /" #'comment-or-uncomment-region)
 (bind-key "C-c /" #'comment-dwim)
-(bind-key "<f10>" #'ff-find-other-file)
+(bind-key "<f10>" #'ff-find-other-file) ; todo: maybe make lsp find the other file here
 (bind-key "s-[" #'pop-global-mark)
 (bind-key "<s-left>" #'move-beginning-of-line)
 (bind-key "<s-right>" #'move-end-of-line)
-(bind-key "<C-left>" #'previous-buffer)
-(bind-key "<C-right>" #'next-buffer)
+(bind-key "<C-s-tab>" #'previous-buffer)
+(bind-key "<C-s-iso-lefttab>" #'next-buffer)
+
+(bind-key "<M-left>" #'left-word)
+(bind-key "<M-right>" #'right-word)
+
+(bind-key "<C-S-left>" #'windmove-left)
+(bind-key "<C-S-right>" #'windmove-right)
+(bind-key "<C-S-down>" #'windmove-down)
+(bind-key "<C-S-up>" #'windmove-up)
+
+;; (defun my:show-copyq ()
+;;   "Run show copyq command."
+;;   (interactive)
+;;   (shell-command "copyq.sh"))
+
+;; (bind-key "M-s-v" #'my:show-copyq)
 
 (defun mark-from-point-to-end-of-line ()
-  "Marks everything from point to end of line"
+  "Mark everything from point to end of line."
   (interactive)
   (set-mark (point))
   (activate-mark)
   (end-of-line))
 
 (defun mark-from-point-to-beginning-of-line ()
-  "Marks everything from point to beginning of line"
+  "Mark everything from point to beginning of line."
   (interactive)
   (set-mark (point))
   (activate-mark)
@@ -695,9 +759,9 @@
 (bind-key "<M-S-down>" #'move-line-down)
 (bind-key "s-a" #'mark-whole-buffer)
 
-(use-package eyebrowse
-  :init
-  (eyebrowse-mode t))
+;; (use-package eyebrowse
+;;   :init
+;;   (eyebrowse-mode t))
 
 (use-package dumb-jump
   :init
@@ -718,6 +782,7 @@
   :init
   (fmakunbound 'gdb)
   (fmakunbound 'gdb-enable-debug))
+;; todo: look at emacs-gdb bindings here and get them in accordance to whatever we set for dap-mode
 
 ;; irony
 
@@ -853,18 +918,6 @@
       (start-process "my-appt-notification-app" nil my-appt-notification-app (nth i min-to-app) (nth i msg)))))
 
 
-;; dashboard: todo
-(use-package dashboard
-  :config
-  (dashboard-setup-startup-hook)
-  :custom
-  (dashboard-projects-backend 'projectile)
-  (dashboard-items '((recents  . 10)
-                     (projects . 10)
-                     (agenda . 10)
-                     (bookmarks . 5)
-                     (registers . 5))))
-
 ;; purpose
 ;; (use-package window-purpose)
 ;; (purpose-mode)
@@ -881,14 +934,16 @@
   (("M-s-e" . persp-ivy-switch-buffer)   ; or use a nicer switcher, see below
    ("<C-M-tab>" . persp-next)
    ("<C-M-iso-lefttab>" . persp-prev))
-  :config
-  (persp-state-load persp-state-default-file)
   :hook
-  (kill-emacs-hook . persp-state-save)
+  (kill-emacs . persp-state-save)
   :custom
-  (persp-state-default-file (concat (getenv "HOME") "/.config/emacs/perspectives")))
+  (persp-state-default-file (concat (getenv "HOME") "/.config/emacs/perspectives"))
+  (persp-sort 'created))
 
-(persp-mode)
+(progn
+  (persp-mode)
+  (persp-state-load persp-state-default-file)
+  (persp-switch "main"))
 
 ;; from perspective's author:
 
@@ -899,6 +954,36 @@
 
 (setq even-window-sizes nil)  ; display-buffer hint: avoid resizing
 
+;; go-mode
+
+(use-package go-mode
+  :custom
+  (lsp-enable-links nil)
+  :config
+  (add-hook 'before-save-hook #'gofmt-before-save))
+
+(use-package go-snippets)
+
+(use-package go-projectile)
+
+(use-package gotest
+  :bind (:map go-mode-map
+              ("C-c a t" . #'go-test-current-test)))
+
+;; dashboard
+
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook)
+  :custom
+  (dashboard-projects-backend 'projectile)
+  (dashboard-items '((recents  . 10)
+                     (projects . 10)
+                     (agenda . 10)
+                     (bookmarks . 5)
+                     (registers . 5))))
+
+
 ;; cursor color
 
 (set-cursor-color "#DC322F")
@@ -908,9 +993,19 @@
   :hook (dired-mode . all-the-icons-dired-mode))
 
 ;; git-gutter
-(use-package git-gutter
+;; todo: replace with diff-hl
+;; (use-package git-gutter
+;;   :config
+;;   (global-git-gutter-mode +1))
+
+;; diff-hl
+(use-package diff-hl
   :config
-  (global-git-gutter-mode +1))
+  (global-diff-hl-mode)
+  :hook
+  (magit-pre-refresh . diff-hl-magit-pre-refresh)
+  (magit-post-refresh . diff-hl-magit-post-refresh)
+  :after (magit))
 
 ;; custom-file
 (setq custom-file "~/.config/emacs/emacs-custom.el")

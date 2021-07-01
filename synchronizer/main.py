@@ -1,6 +1,11 @@
 import argparse
 import os
 
+# TODO: download and install go-delve
+# for emacs go-mode, download and unpack the extension? (dap-go-setup)
+# TODO: gather keymaps for Jetbrains IDEs
+# Remap Intellij IDEA, Goland and Pycharm
+
 HOME = os.environ["HOME"]
 DOT_SSH = "{}/.ssh".format(HOME)
 GIT_ROOT = "{}/git_tree".format(HOME)
@@ -29,7 +34,7 @@ def mkdir(d):
     try:
         os.mkdir(d)
     except FileExistsError:
-        pass 
+        pass
 
 
 def install_packages():

@@ -30,6 +30,7 @@
 (defun reload-config ()
   "Reload the literate config from ~/.config/emacs/config.el."
   (interactive)
+  (persp-state-save)
   (load-file "~/.config/emacs/config.el"))
 
 (setq max-lisp-eval-depth 2000)

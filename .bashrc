@@ -1,4 +1,4 @@
-export GOPATH=$HOME/git_tree/gopath
+export GOPATH=$HOME/gopath
 export PATH="$PATH:/usr/local/go/bin:$GOPATH/bin:$HOME/.local/bin"
 shopt -s histappend
 shopt -s cmdhist
